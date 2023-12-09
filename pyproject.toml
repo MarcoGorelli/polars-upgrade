@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "dataframe_api_compat"
+name = "polars_upgrade"
 version = "0.2.3"
 authors = [
   { name="Marco Gorelli", email="33491632+MarcoGorelli@users.noreply.github.com" },
@@ -16,10 +16,6 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-
-[project.urls]
-"Homepage" = "https://github.com/data-apis/dataframe-api-compat"
-"Bug Tracker" = "https://github.com/data-apis/dataframe-api-compat"
 
 [tool.ruff]
 line-length = 90
