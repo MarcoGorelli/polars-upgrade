@@ -14,7 +14,7 @@ from typing import TypeVar
 from tokenize_rt import Offset
 from tokenize_rt import Token
 
-from pyupgrade import _plugins
+from polars_upgrade import _plugins
 
 Version = Tuple[int, ...]
 

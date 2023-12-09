@@ -7,12 +7,12 @@ from typing import Iterable
 from tokenize_rt import Offset
 from tokenize_rt import Token
 
-from pyupgrade._ast_helpers import ast_to_offset
-from pyupgrade._data import register
-from pyupgrade._data import State
-from pyupgrade._data import TokenFunc
-from pyupgrade._token_helpers import find_op
-from pyupgrade._token_helpers import parse_call_args
+from polars_upgrade._ast_helpers import ast_to_offset
+from polars_upgrade._data import register
+from polars_upgrade._data import State
+from polars_upgrade._data import TokenFunc
+from polars_upgrade._token_helpers import find_op
+from polars_upgrade._token_helpers import parse_call_args
 
 
 def rewrite_to_enable(

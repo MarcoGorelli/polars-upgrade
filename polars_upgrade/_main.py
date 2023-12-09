@@ -17,17 +17,17 @@ from tokenize_rt import Token
 from tokenize_rt import tokens_to_src
 from tokenize_rt import UNIMPORTANT_WS
 
-from pyupgrade._ast_helpers import ast_parse
-from pyupgrade._data import FUNCS
-from pyupgrade._data import Settings
-from pyupgrade._data import visit
-from pyupgrade._string_helpers import DotFormatPart
-from pyupgrade._string_helpers import is_codec
-from pyupgrade._string_helpers import parse_format
-from pyupgrade._string_helpers import unparse_parsed_string
-from pyupgrade._token_helpers import is_close
-from pyupgrade._token_helpers import is_open
-from pyupgrade._token_helpers import remove_brace
+from polars_upgrade._ast_helpers import ast_parse
+from polars_upgrade._data import FUNCS
+from polars_upgrade._data import Settings
+from polars_upgrade._data import visit
+from polars_upgrade._string_helpers import DotFormatPart
+from polars_upgrade._string_helpers import is_codec
+from polars_upgrade._string_helpers import parse_format
+from polars_upgrade._string_helpers import unparse_parsed_string
+from polars_upgrade._token_helpers import is_close
+from polars_upgrade._token_helpers import is_open
+from polars_upgrade._token_helpers import remove_brace
 
 
 def inty(s: str) -> bool:

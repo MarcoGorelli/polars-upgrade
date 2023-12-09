@@ -1,7 +1,7 @@
--   id: pyupgrade
-    name: pyupgrade
+-   id: polars_upgrade
+    name: polars_upgrade
     description: Automatically upgrade syntax for newer versions.
-    entry: pyupgrade
+    entry: polars_upgrade
     language: python
     types: [python]
     # for backward compatibility

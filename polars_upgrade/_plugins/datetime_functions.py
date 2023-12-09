@@ -7,11 +7,11 @@ from typing import Iterable
 from tokenize_rt import Offset
 from tokenize_rt import Token
 
-from pyupgrade._ast_helpers import ast_to_offset
-from pyupgrade._data import register
-from pyupgrade._data import State
-from pyupgrade._data import TokenFunc
-from pyupgrade._token_helpers import is_simple_expression
+from polars_upgrade._ast_helpers import ast_to_offset
+from polars_upgrade._data import register
+from polars_upgrade._data import State
+from polars_upgrade._data import TokenFunc
+from polars_upgrade._token_helpers import is_simple_expression
 
 
 def rename(
