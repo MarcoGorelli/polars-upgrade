@@ -339,7 +339,7 @@ Version = tuple[int, ...]
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('filenames', nargs='*')
-    parser.add_argument('--current-version', type=str)
+    parser.add_argument('--current-version', required=True, type=str)
     args = parser.parse_args(argv)
     current_version = tuple(int(v) for v in args.current_version.split('.'))
     args.current_version = current_version
