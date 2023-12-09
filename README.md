@@ -5,7 +5,9 @@ Automatically upgrade your Polars code so it's compatible with future versions.
 
 ## Installation
 
-Note: this is work in progress, but I hope to soon make it available on pip / conda.
+```
+pip install -U polars-upgrade
+```
 
 ## Usage
 
@@ -19,6 +21,11 @@ polars-upgrade file.py --current-version=0.18.4
 ```
 and `polars-upgrade` will automatically upgrade `file.py` to use the newer Polars
 syntax.
+
+You can also pass a directory, e.g.
+```
+polars-upgrade src --current-version=0.18.4
+```
 
 ## Notes
 
