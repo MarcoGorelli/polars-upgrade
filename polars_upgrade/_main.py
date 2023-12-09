@@ -18,6 +18,7 @@ from tokenize_rt import Token
 from tokenize_rt import tokens_to_src
 from tokenize_rt import UNIMPORTANT_WS
 
+from polars_upgrade import __version__ as version
 from polars_upgrade._ast_helpers import ast_parse
 from polars_upgrade._data import FUNCS
 from polars_upgrade._data import Settings
@@ -349,6 +350,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('filenames', nargs='*')
     parser.add_argument('--current-version', required=True, type=str)
+    parser.add_argument(
+        '--version', action='version',
+        version=f'%(prog)s {version}',
+    )
     args = parser.parse_args(argv)
     current_version = tuple(int(v) for v in args.current_version.split('.'))
     args.current_version = current_version
