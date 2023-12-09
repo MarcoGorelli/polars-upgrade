@@ -332,12 +332,15 @@ def _fix_file(filename: str, args: argparse.Namespace) -> int:
 
     return contents_text != contents_text_orig
 
+Version = tuple[int, ...]
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('filenames', nargs='*')
     parser.add_argument('--current-version', type=str)
     args = parser.parse_args(argv)
+    current_version = tuple(int(v) for v in args.current_version.split('.'))
+    args.current_version = current_version
 
     ret = 0
     for filename in args.filenames:
