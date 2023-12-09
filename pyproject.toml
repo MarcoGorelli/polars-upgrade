@@ -16,6 +16,9 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dependencies = [
+  "tokenize-rt>=5.2.0",
+]
 
 [project.scripts]
 polars-upgrade = "polars_upgrade._main:main"
