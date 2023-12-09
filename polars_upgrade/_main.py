@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import pathlib
 import re
 import sys
 import tokenize
@@ -28,6 +29,14 @@ from polars_upgrade._string_helpers import unparse_parsed_string
 from polars_upgrade._token_helpers import is_close
 from polars_upgrade._token_helpers import is_open
 from polars_upgrade._token_helpers import remove_brace
+
+EXCLUDES = (
+    r'/('
+    r'\.direnv|\.eggs|\.git|\.hg|\.ipynb_checkpoints|\.mypy_cache|\.nox|\.svn|'
+    r'\.tox|\.venv|'
+    r'_build|buck-out|build|dist|venv'
+    r')/'
+)
 
 
 def inty(s: str) -> bool:
@@ -343,10 +352,21 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
     current_version = tuple(int(v) for v in args.current_version.split('.'))
     args.current_version = current_version
-
+    paths = [pathlib.Path(path).resolve() for path in args.filenames]
     ret = 0
-    for filename in args.filenames:
-        ret |= _fix_file(filename, args)
+    for path in paths:
+        if path.is_file():
+            filepaths = iter((path,))
+        else:
+            filepaths = (
+                p for p in path.rglob('*')
+                if not re.search(EXCLUDES, str(p.as_posix())) and
+                p.suffix == '.py'
+            )
+
+        for filepath in filepaths:
+            ret |= _fix_file(str(filepath), args)
+
     return ret
 
 

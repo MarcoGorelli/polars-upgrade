@@ -17,6 +17,9 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+[project.scripts]
+polars-upgrade = "polars_upgrade._main:main"
+
 [tool.ruff]
 line-length = 90
 fix = true
