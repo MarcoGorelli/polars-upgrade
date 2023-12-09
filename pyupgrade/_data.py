@@ -28,7 +28,7 @@ class Settings(NamedTuple):
 
 class State(NamedTuple):
     settings: Settings
-    from_imports: dict[str, set[str]]
+    aliases: set[str] = set()
     in_annotation: bool = False
 
 
@@ -37,20 +37,7 @@ TokenFunc = Callable[[int, List[Token]], None]
 ASTFunc = Callable[[State, AST_T, ast.AST], Iterable[Tuple[Offset, TokenFunc]]]
 
 RECORD_FROM_IMPORTS = frozenset((
-    '__future__',
-    'asyncio',
-    'collections',
-    'functools',
-    'mmap',
-    'os',
-    'select',
-    'six',
-    'six.moves',
-    'socket',
-    'subprocess',
-    'sys',
-    'typing',
-    'typing_extensions',
+    'polars',
 ))
 
 FUNCS = collections.defaultdict(list)
@@ -74,7 +61,6 @@ def visit(
 ) -> dict[Offset, list[TokenFunc]]:
     initial_state = State(
         settings=settings,
-        from_imports=collections.defaultdict(set),
     )
 
     nodes: list[tuple[State, ast.AST, ast.AST]] = [(initial_state, tree, tree)]
@@ -88,14 +74,10 @@ def visit(
             for offset, token_func in ast_func(state, node, parent):
                 ret[offset].append(token_func)
 
-        if (
-                isinstance(node, ast.ImportFrom) and
-                not node.level and
-                node.module in RECORD_FROM_IMPORTS
-        ):
-            state.from_imports[node.module].update(
-                name.name for name in node.names if not name.asname
-            )
+        if isinstance(node, ast.Import):
+            for import_ in node.names:
+                if import_.name == 'polars':
+                    state.aliases.add(import_.asname or import_.name)
 
         for name in reversed(node._fields):
             value = getattr(node, name)
