@@ -318,10 +318,7 @@ def _fix_file(filename: str, args: argparse.Namespace) -> int:
     contents_text = _fix_plugins(
         contents_text,
         settings=Settings(
-            min_version=args.min_version,
-            keep_percent_format=args.keep_percent_format,
-            keep_mock=args.keep_mock,
-            keep_runtime_typing=args.keep_runtime_typing,
+            current_version=args.current_version,
         ),
     )
     contents_text = _fix_tokens(contents_text)
@@ -333,51 +330,13 @@ def _fix_file(filename: str, args: argparse.Namespace) -> int:
         with open(filename, 'w', encoding='UTF-8', newline='') as f:
             f.write(contents_text)
 
-    if args.exit_zero_even_if_changed:
-        return 0
-    else:
-        return contents_text != contents_text_orig
+    return contents_text != contents_text_orig
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('filenames', nargs='*')
-    parser.add_argument('--exit-zero-even-if-changed', action='store_true')
-    parser.add_argument('--keep-percent-format', action='store_true')
-    parser.add_argument('--keep-mock', action='store_true')
-    parser.add_argument('--keep-runtime-typing', action='store_true')
-    parser.add_argument(
-        '--py3-plus', '--py3-only',
-        action='store_const', dest='min_version', default=(3,), const=(3,),
-    )
-    parser.add_argument(
-        '--py36-plus',
-        action='store_const', dest='min_version', const=(3, 6),
-    )
-    parser.add_argument(
-        '--py37-plus',
-        action='store_const', dest='min_version', const=(3, 7),
-    )
-    parser.add_argument(
-        '--py38-plus',
-        action='store_const', dest='min_version', const=(3, 8),
-    )
-    parser.add_argument(
-        '--py39-plus',
-        action='store_const', dest='min_version', const=(3, 9),
-    )
-    parser.add_argument(
-        '--py310-plus',
-        action='store_const', dest='min_version', const=(3, 10),
-    )
-    parser.add_argument(
-        '--py311-plus',
-        action='store_const', dest='min_version', const=(3, 11),
-    )
-    parser.add_argument(
-        '--py312-plus',
-        action='store_const', dest='min_version', const=(3, 12),
-    )
+    parser.add_argument('--current-version', type=str)
     args = parser.parse_args(argv)
 
     ret = 0

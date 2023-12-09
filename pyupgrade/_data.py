@@ -20,10 +20,7 @@ Version = Tuple[int, ...]
 
 
 class Settings(NamedTuple):
-    min_version: Version = (3,)
-    keep_percent_format: bool = False
-    keep_mock: bool = False
-    keep_runtime_typing: bool = False
+    current_version: Version = (3,)
 
 
 class State(NamedTuple):
