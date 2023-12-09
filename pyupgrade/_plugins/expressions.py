@@ -20,17 +20,20 @@ from pyupgrade._token_helpers import find_op
 from pyupgrade._token_helpers import parse_call_args
 from pyupgrade._token_helpers import replace_name, is_simple_expression
 
-def prepend_total(
+def rename(
     i: int,
     tokens: list[Token],
     *,
     name: str,
-    new_name: str,
+    new: str,
 ) -> None:
     while not (tokens[i].name == 'NAME' and tokens[i].src == name):
         i += 1
-    tokens[i] = tokens[i]._replace(src=new_name)
+    tokens[i] = tokens[i]._replace(src=new)
 
+RENAMINGS = {
+    'map_dict': ((0, 19, 16), 'replace'),
+}
 
 
 @register(ast.Call)
@@ -39,16 +42,15 @@ def visit_Call(
         node: ast.Call,
         parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
+    breakpoint()
     if (
-            state.settings.current_version >= (0, 19, 13) and
             isinstance(node.func, ast.Attribute) and
-            isinstance(node.func.value, ast.Attribute) and
-            isinstance(node.func.value.value, ast.Call) and
-            is_simple_expression(node.func.value.value, state.aliases) and
-            node.func.value.attr == 'dt' and
-            node.func.attr in ('nanoseconds', 'microseconds', 'milliseconds', 'seconds', 'minutes', 'hours', 'days', 'weeks') and
-            len(node.args) == 0
+            isinstance(node.func.value, ast.Call) and
+            is_simple_expression(node.func.value, state.aliases) and
+            node.func.attr in RENAMINGS
     ):
-        new_attr = f'total_{node.func.attr}'
-        func = functools.partial(prepend_total, name=node.func.attr, new_name=new_attr)
-        yield ast_to_offset(node.func), func
+        min_version, new_name = RENAMINGS[node.func.attr]
+        breakpoint()
+        if state.settings.current_version >= min_version:
+            func = functools.partial(rename, name=node.func.attr, new=new_name)
+            yield ast_to_offset(node), func
