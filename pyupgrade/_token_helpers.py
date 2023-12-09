@@ -503,3 +503,11 @@ def indented_amount(i: int, tokens: list[Token]) -> str:
         raise ValueError('not at beginning of line')
     else:
         return ''
+
+def is_simple_expression(node: ast.Call, aliases: set[str]) -> bool:
+    return (
+        isinstance(node.func, ast.Attribute) and
+        node.func.attr in ('col', 'all', 'any') and
+        isinstance(node.func.value, ast.Name) and
+        node.func.value.id in aliases
+    )
