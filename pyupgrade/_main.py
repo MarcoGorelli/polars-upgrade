@@ -332,7 +332,9 @@ def _fix_file(filename: str, args: argparse.Namespace) -> int:
 
     return contents_text != contents_text_orig
 
+
 Version = tuple[int, ...]
+
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()

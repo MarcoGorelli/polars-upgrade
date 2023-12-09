@@ -4,21 +4,16 @@ import ast
 import functools
 from typing import Iterable
 
-from tokenize_rt import Offset, Token
+from tokenize_rt import Offset
+from tokenize_rt import Token
 
 from pyupgrade._ast_helpers import ast_to_offset
 from pyupgrade._data import register
 from pyupgrade._data import State
 from pyupgrade._data import TokenFunc
-from pyupgrade._ast_helpers import ast_to_offset
-from pyupgrade._ast_helpers import is_name_attr
-from pyupgrade._data import register
-from pyupgrade._data import State
-from pyupgrade._data import TokenFunc
-from pyupgrade._token_helpers import delete_argument
 from pyupgrade._token_helpers import find_op
 from pyupgrade._token_helpers import parse_call_args
-from pyupgrade._token_helpers import replace_argument
+
 
 def rewrite_to_enable(
     i: int,
@@ -29,20 +24,21 @@ def rewrite_to_enable(
     i = func_args[0][0]
     tokens[i] = tokens[i]._replace(src='')
 
+
 def rewrite_to_disable(
     i: int,
     tokens: list[Token],
 ) -> None:
     j = find_op(tokens, i, '(')
     func_args, _ = parse_call_args(tokens, j)
-    breakpoint()
-    while not (tokens[i].name == 'NAME' and tokens[i].src == 'enable_string_cache'):
+    while not (
+        tokens[i].name == 'NAME' and
+        tokens[i].src == 'enable_string_cache'
+    ):
         i += 1
-    breakpoint()
     tokens[i] = tokens[i]._replace(src='disable_string_cache')
     i = func_args[0][0]
     tokens[i] = tokens[i]._replace(src='')
-
 
 
 @register(ast.Call)

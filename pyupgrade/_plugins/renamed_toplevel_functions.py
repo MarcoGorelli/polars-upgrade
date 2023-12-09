@@ -14,13 +14,14 @@ from pyupgrade._token_helpers import replace_name
 
 RENAMINGS = {
     'avg': ((0, 18, 12), 'mean'),
-    'map': ((0, 19, 0), 'map_batches'), # 0.19.0
+    'map': ((0, 19, 0), 'map_batches'),  # 0.19.0
     'apply': ((0, 19, 0), 'map_groups'),
     'cumsum': ((0, 19, 14), 'cum_sum'),  # 0.19.14
     'cumfold': ((0, 19, 14), 'cum_fold'),
     'cumreduce': ((0, 19, 14), 'cum_reduce'),
     'cumsum_horizontal': ((0, 19, 14), 'cum_sum_horizontal'),
 }
+
 
 @register(ast.Attribute)
 def visit_Attribute(
@@ -36,5 +37,8 @@ def visit_Attribute(
         min_version, new_name = RENAMINGS[node.attr]
         if state.settings.current_version >= min_version:
             new_attr = f'{node.value.id}.{new_name}'
-            func = functools.partial(replace_name, name=node.attr, new=new_attr)
+            func = functools.partial(
+                replace_name, name=node.attr,
+                new=new_attr,
+            )
             yield ast_to_offset(node), func

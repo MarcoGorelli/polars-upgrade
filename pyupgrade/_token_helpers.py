@@ -504,6 +504,7 @@ def indented_amount(i: int, tokens: list[Token]) -> str:
     else:
         return ''
 
+
 def is_simple_expression(node: ast.Call, aliases: set[str]) -> bool:
     return (
         isinstance(node.func, ast.Attribute) and

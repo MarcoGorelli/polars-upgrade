@@ -4,21 +4,15 @@ import ast
 import functools
 from typing import Iterable
 
-from tokenize_rt import Offset, Token
+from tokenize_rt import Offset
+from tokenize_rt import Token
 
 from pyupgrade._ast_helpers import ast_to_offset
 from pyupgrade._data import register
 from pyupgrade._data import State
 from pyupgrade._data import TokenFunc
-from pyupgrade._ast_helpers import ast_to_offset
-from pyupgrade._ast_helpers import is_name_attr
-from pyupgrade._data import register
-from pyupgrade._data import State
-from pyupgrade._data import TokenFunc
-from pyupgrade._token_helpers import delete_argument
-from pyupgrade._token_helpers import find_op
-from pyupgrade._token_helpers import parse_call_args
-from pyupgrade._token_helpers import replace_name, is_simple_expression
+from pyupgrade._token_helpers import is_simple_expression
+
 
 def rename(
     i: int,
@@ -30,7 +24,6 @@ def rename(
     while not (tokens[i].name == 'NAME' and tokens[i].src == name):
         i += 1
     tokens[i] = tokens[i]._replace(src=new_name)
-
 
 
 @register(ast.Call)
@@ -46,9 +39,15 @@ def visit_Call(
             isinstance(node.func.value.value, ast.Call) and
             is_simple_expression(node.func.value.value, state.aliases) and
             node.func.value.attr == 'dt' and
-            node.func.attr in ('nanoseconds', 'microseconds', 'milliseconds', 'seconds', 'minutes', 'hours', 'days', 'weeks') and
+            node.func.attr in (
+                'nanoseconds', 'microseconds', 'milliseconds',
+                'seconds', 'minutes', 'hours', 'days', 'weeks',
+            ) and
             len(node.args) == 0
     ):
         new_attr = f'total_{node.func.attr}'
-        func = functools.partial(rename, name=node.func.attr, new_name=new_attr)
+        func = functools.partial(
+            rename, name=node.func.attr,
+            new_name=new_attr,
+        )
         yield ast_to_offset(node.func), func

@@ -4,21 +4,15 @@ import ast
 import functools
 from typing import Iterable
 
-from tokenize_rt import Offset, Token
+from tokenize_rt import Offset
+from tokenize_rt import Token
 
 from pyupgrade._ast_helpers import ast_to_offset
 from pyupgrade._data import register
 from pyupgrade._data import State
 from pyupgrade._data import TokenFunc
-from pyupgrade._ast_helpers import ast_to_offset
-from pyupgrade._ast_helpers import is_name_attr
-from pyupgrade._data import register
-from pyupgrade._data import State
-from pyupgrade._data import TokenFunc
-from pyupgrade._token_helpers import delete_argument
-from pyupgrade._token_helpers import find_op
-from pyupgrade._token_helpers import parse_call_args
-from pyupgrade._token_helpers import replace_name, is_simple_expression
+from pyupgrade._token_helpers import is_simple_expression
+
 
 def rename(
     i: int,
@@ -31,24 +25,25 @@ def rename(
         i += 1
     tokens[i] = tokens[i]._replace(src=new)
 
+
 RENAMINGS = {
     'map_dict': ((0, 19, 16), 'replace'),
-    'cumcount', ((0, 19, 14), 'cum_count'),
-    'cummax', ((0, 19, 14), 'cum_max'),
-    'cumprod', ((0, 19, 14), 'cum_prod'),
-    'cumsum', ((0, 19, 14), 'cum_sum'),
-    'take', ((0, 19, 14), 'gather'),
-    'take_every', ((0, 19, 14), 'gather_every'),
-    'is_last', ((0, 19, 3), 'is_last_distinct'),
-    'is_first', ((0, 19, 3), 'is_first_distinct'),
-    'rolling_apply', ((0, 19, 0), 'rolling_map'),
-    'apply', ((0, 19, 0), 'map_elements'),
-    'map', ((0, 19, 0), 'map_batches'),
-    'is_not', ((0, 19, 0), 'not_'),
-    'keep_name', ((0, 19, 12), 'name.keep'),
-    'suffix', ((0, 19, 12), 'name.suffix'),
-    'prefix', ((0, 19, 12), 'name.prefix'),
-    'map_alias', ((0, 19, 12), 'name.map'),
+    'cumcount': ((0, 19, 14), 'cum_count'),
+    'cummax': ((0, 19, 14), 'cum_max'),
+    'cumprod': ((0, 19, 14), 'cum_prod'),
+    'cumsum': ((0, 19, 14), 'cum_sum'),
+    'take': ((0, 19, 14), 'gather'),
+    'take_every': ((0, 19, 14), 'gather_every'),
+    'is_last': ((0, 19, 3), 'is_last_distinct'),
+    'is_first': ((0, 19, 3), 'is_first_distinct'),
+    'rolling_apply': ((0, 19, 0), 'rolling_map'),
+    'apply': ((0, 19, 0), 'map_elements'),
+    'map': ((0, 19, 0), 'map_batches'),
+    'is_not': ((0, 19, 0), 'not_'),
+    'keep_name': ((0, 19, 12), 'name.keep'),
+    'suffix': ((0, 19, 12), 'name.suffix'),
+    'prefix': ((0, 19, 12), 'name.prefix'),
+    'map_alias': ((0, 19, 12), 'name.map'),
 }
 
 
