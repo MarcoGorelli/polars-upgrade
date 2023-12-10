@@ -31,7 +31,7 @@ from polars_upgrade._main import _fix_plugins
             'import polars as pl\n'
             'pl.col("a").map_dict({2: 3}, foo=3 )\n',
             'import polars as pl\n'
-            'pl.col("a").replace({2: 3}, foo=3,  default=None)\n',
+            'pl.col("a").replace({2: 3}, foo=3, default=None )\n',
         ),
     ),
 )

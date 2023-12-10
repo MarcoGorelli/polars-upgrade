@@ -164,8 +164,10 @@ syntax.
 
 ### Version 0.19.16
 ```diff
-- pl.col('a').map_dict
-+ pl.col('a').replace
+- pl.col('a').map_dict({'a': 'b'})
++ pl.col('a').replace({'a': 'b'}, default=None)
+- pl.col('a').map_dict({'a': 'b'}, default='c')
++ pl.col('a').replace({'a': 'b'}, default='c')
 ```
 
 ## Notes
