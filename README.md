@@ -24,6 +24,13 @@ syntax.
 
 ## Supported rewrites
 
+### Version 0.18.12+
+
+```diff
+- pl.avg
++ pl.mean
+```
+
 ### Version 0.19.0+
 
 ```diff
@@ -46,6 +53,30 @@ syntax.
 - pl.apply
 + pl.map_groups
 ```
+
+### Version 0.19.3+
+
+```diff
+- pl.enable_string_cache(True)
++ pl.enable_string_cache()
+- pl.enable_string_cache(False)
++ pl.disable_string_cache()
+- pl.col('a').list.count_match
++ pl.col('a').list.count_matches
+- pl.col('a').list.is_last
++ pl.col('a').list.is_last_distinct
+- pl.col('a').list.is_first
++ pl.col('a').list.is_first_distinct
+- pl.col('a').str.strip
++ pl.col('a').str.strip_chars
+- pl.col('a').str.lstrip
++ pl.col('a').str.strip_chars_start
+- pl.col('a').str.rstrip
++ pl.col('a').str.strip_chars_end
+- pl.col('a').str.count_match
++ pl.col('a').str.count_matches
+```
+
 
 ## Notes
 
