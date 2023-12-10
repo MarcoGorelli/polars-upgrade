@@ -16,18 +16,6 @@ from polars_upgrade._token_helpers import parse_call_args
 from polars_upgrade._token_helpers import replace_argument
 
 
-def rename(
-    i: int,
-    tokens: list[Token],
-    *,
-    name: str,
-    new: str,
-) -> None:
-    while not (tokens[i].name == 'NAME' and tokens[i].src == name):
-        i += 1
-    tokens[i] = tokens[i]._replace(src=new)
-
-
 def _use_label(
     i: int,
     tokens: list[Token],
