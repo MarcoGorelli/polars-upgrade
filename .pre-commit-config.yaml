@@ -1,4 +1,4 @@
-exclude: bump_version\.py
+exclude: (bump_version\.py|tmp\.py)
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0

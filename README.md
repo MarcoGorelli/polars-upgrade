@@ -38,8 +38,8 @@ syntax.
 + df.group_by_dynamic
 - df.groupby_rolling
 + df.rolling
-- df.group_by_rolling(...).apply
-+ df.group_by_rolling(...).map_groups
+- df.group_by_rolling('ts').apply
++ df.group_by_rolling('ts').map_groups
 - pl.col('a').rolling_apply
 + pl.col('a').rolling_map
 - pl.col('a').apply
