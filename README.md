@@ -38,8 +38,8 @@ syntax.
 + df.group_by_dynamic
 - df.groupby_rolling
 + df.rolling
-- df.group_by_rolling('ts').apply
-+ df.group_by_rolling('ts').map_groups
+- df.rolling('ts').apply
++ df.rolling('ts').map_groups
 - pl.col('a').rolling_apply
 + pl.col('a').rolling_map
 - pl.col('a').apply
@@ -63,10 +63,10 @@ syntax.
 + pl.disable_string_cache()
 - pl.col('a').list.count_match
 + pl.col('a').list.count_matches
-- pl.col('a').list.is_last
-+ pl.col('a').list.is_last_distinct
-- pl.col('a').list.is_first
-+ pl.col('a').list.is_first_distinct
+- pl.col('a').is_last
++ pl.col('a').is_last_distinct
+- pl.col('a').is_first
++ pl.col('a').is_first_distinct
 - pl.col('a').str.strip
 + pl.col('a').str.strip_chars
 - pl.col('a').str.lstrip

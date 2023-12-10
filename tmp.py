@@ -1,21 +1,19 @@
-from __future__ import annotations
-
 import polars as pl
-pl.mean
-df.group_by_dynamic
-df.rolling
-df.group_by_rolling('ts').apply
-pl.col('a').rolling_map
-pl.col('a').map_elements
-pl.col('a').map_batches
-pl.col('a').not_
-pl.map_batches
-pl.map_groups
+pl.avg
+df.groupby_dynamic
+df.groupby_rolling
+df.rolling('ts').apply
+pl.col('a').rolling_apply
+pl.col('a').apply
+pl.col('a').map
+pl.col('a').is_not
+pl.map
+pl.apply
 pl.enable_string_cache(True)
 pl.enable_string_cache(False)
 pl.col('a').list.count_match
-pl.col('a').list.is_last
-pl.col('a').list.is_first
+pl.col('a').is_last
+pl.col('a').is_first
 pl.col('a').str.strip
 pl.col('a').str.lstrip
 pl.col('a').str.rstrip
