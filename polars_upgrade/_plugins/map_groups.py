@@ -25,13 +25,6 @@ def rename(
     tokens[i] = tokens[i]._replace(src=new)
 
 
-RENAMINGS = {
-    'groupby_dynamic': ((0, 19, 0), 'group_by_dynamic'),
-    'groupby_rolling': ((0, 19, 0), 'rolling'),
-    'groupby': ((0, 19, 0), 'group_by'),
-}
-
-
 @register(ast.Attribute)
 def visit_Attribute(
         state: State,
@@ -39,9 +32,14 @@ def visit_Attribute(
         parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            node.attr in RENAMINGS
+            node.attr == 'apply' and
+            isinstance(node.value, ast.Call) and
+            isinstance(node.value.func, ast.Attribute) and
+            node.value.func.attr in (
+                'group_by', 'group_by_dynamic',
+                'rolling',
+            ) and
+            state.settings.current_version >= (0, 19, 0)
     ):
-        min_version, new_name = RENAMINGS[node.attr]
-        if state.settings.current_version >= min_version:
-            func = functools.partial(rename, name=node.attr, new=new_name)
-            yield ast_to_offset(node), func
+        func = functools.partial(rename, name=node.attr, new='map_groups')
+        yield ast_to_offset(node), func
