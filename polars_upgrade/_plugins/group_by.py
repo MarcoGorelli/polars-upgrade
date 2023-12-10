@@ -28,7 +28,6 @@ def rename(
 RENAMINGS = {
     'groupby_dynamic': ((0, 19, 0), 'group_by_dynamic'),
     'groupby_rolling': ((0, 19, 0), 'rolling'),
-    'groupby': ((0, 19, 0), 'group_by'),
 }
 
 
