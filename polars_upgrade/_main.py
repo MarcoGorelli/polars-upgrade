@@ -328,7 +328,7 @@ def _fix_file(filename: str, args: argparse.Namespace) -> int:
     contents_text = _fix_plugins(
         contents_text,
         settings=Settings(
-            current_version=args.current_version,
+            target_version=args.target_version,
         ),
     )
     # contents_text = _fix_tokens(contents_text)
@@ -349,14 +349,14 @@ Version = tuple[int, ...]
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('filenames', nargs='*')
-    parser.add_argument('--current-version', required=True, type=str)
+    parser.add_argument('--target-version', required=True, type=str)
     parser.add_argument(
         '--version', action='version',
         version=f'%(prog)s {version}',
     )
     args = parser.parse_args(argv)
-    current_version = tuple(int(v) for v in args.current_version.split('.'))
-    args.current_version = current_version
+    target_version = tuple(int(v) for v in args.target_version.split('.'))
+    args.target_version = target_version
     paths = [pathlib.Path(path).resolve() for path in args.filenames]
     ret = 0
     for path in paths:

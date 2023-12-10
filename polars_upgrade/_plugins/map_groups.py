@@ -39,7 +39,7 @@ def visit_Attribute(
                 'group_by', 'group_by_dynamic',
                 'rolling',
             ) and
-            state.settings.current_version >= (0, 19, 0)
+            state.settings.target_version >= (0, 19, 0)
     ):
         func = functools.partial(rename, name=node.attr, new='map_groups')
         yield ast_to_offset(node), func

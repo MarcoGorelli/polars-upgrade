@@ -20,7 +20,7 @@ Version = Tuple[int, ...]
 
 
 class Settings(NamedTuple):
-    current_version: Version = (3,)
+    target_version: Version = (3,)
 
 
 class State(NamedTuple):

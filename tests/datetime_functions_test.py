@@ -30,5 +30,5 @@ from polars_upgrade._main import _fix_plugins
     ),
 )
 def test_fix_capture_output(s, expected):
-    ret = _fix_plugins(s, settings=Settings(current_version=(0, 19, 18)))
+    ret = _fix_plugins(s, settings=Settings(target_version=(0, 19, 18)))
     assert ret == expected

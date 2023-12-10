@@ -48,7 +48,7 @@ def visit_Call(
         parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            state.settings.current_version >= (0, 19, 3) and
+            state.settings.target_version >= (0, 19, 3) and
             isinstance(node.func, ast.Attribute) and
             isinstance(node.func.value, ast.Name) and
             node.func.attr == 'enable_string_cache' and

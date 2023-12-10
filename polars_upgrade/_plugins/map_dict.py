@@ -66,7 +66,7 @@ def visit_Call(
             isinstance(node.func.value, ast.Call) and
             is_simple_expression(node.func.value, state.aliases) and
             node.func.attr == 'map_dict' and
-            state.settings.current_version >= (0, 19, 16)
+            state.settings.target_version >= (0, 19, 16)
     ):
         if any(k.arg == 'default' for k in node.keywords):
             func = functools.partial(

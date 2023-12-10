@@ -33,7 +33,7 @@ def visit_Attribute(
         parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            state.settings.current_version >= (0, 19, 13) and
+            state.settings.target_version >= (0, 19, 13) and
             isinstance(node.value, ast.Attribute) and
             is_simple_expression(node.value.value, state.aliases) and
             node.value.attr == 'dt' and

@@ -49,7 +49,7 @@ def visit_Call(
             isinstance(node.func, ast.Attribute) and
             node.func.attr == 'group_by_dynamic' and
             len(node.keywords) >= 1 and
-            state.settings.current_version >= (0, 19, 4)
+            state.settings.target_version >= (0, 19, 4)
     ):
         truncate_idx = None
         truncate_value = None

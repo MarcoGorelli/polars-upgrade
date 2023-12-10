@@ -46,7 +46,7 @@ def visit_Attribute(
             node.attr in RENAMINGS
     ):
         min_version, new_name = RENAMINGS[node.attr]
-        if state.settings.current_version >= min_version:
+        if state.settings.target_version >= min_version:
             new_attr = new_name
             func = functools.partial(
                 rename, name=node.attr,

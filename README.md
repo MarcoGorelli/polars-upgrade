@@ -21,7 +21,7 @@ deprecated method names.
 
 All you need to do is:
 ```
-polars-upgrade my_project --current-version=0.18.4
+polars-upgrade my_project --target-version=0.18.4
 ```
 and `polars-upgrade` will automatically upgrade all Python files in `my_project` to use the newer Polars
 syntax.

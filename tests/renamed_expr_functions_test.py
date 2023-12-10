@@ -17,7 +17,7 @@ from polars_upgrade._main import _fix_plugins
     ),
 )
 def test_fix_capture_output_noop(s, version):
-    assert _fix_plugins(s, settings=Settings(current_version=version)) == s
+    assert _fix_plugins(s, settings=Settings(target_version=version)) == s
 
 
 @pytest.mark.parametrize(
@@ -32,5 +32,5 @@ def test_fix_capture_output_noop(s, version):
     ),
 )
 def test_fix_capture_output(s, expected):
-    ret = _fix_plugins(s, settings=Settings(current_version=(0, 19, 19)))
+    ret = _fix_plugins(s, settings=Settings(target_version=(0, 19, 19)))
     assert ret == expected
