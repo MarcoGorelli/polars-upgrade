@@ -1,34 +1,34 @@
 import polars as pl
-pl.mean
-df.group_by_dynamic
-df.rolling
-df.rolling('ts').map_groups
-pl.col('a').rolling_map
-pl.col('a').map_elements
-pl.col('a').map_batches
-pl.col('a').not_
-pl.map_batches
-pl.map_groups
-pl.enable_string_cache()
-pl.disable_string_cache()
-pl.col('a').list.count_matches
-pl.col('a').is_last_distinct
-pl.col('a').is_first_distinct
-pl.col('a').str.strip_chars
-pl.col('a').str.strip_chars_start
-pl.col('a').str.strip_chars_end
-pl.col('a').str.count_matches
-df.group_by_dynamic('ts', label="left")
-df.group_by_dynamic('ts', label="datapoint")
-pl.col('a').list.len
-pl.col('a').str.len_bytes
-pl.col('a').str.len_chars
-pl.col('a').name.keep
-pl.col('a').name.suffix
-pl.col('a').name.prefix
-pl.col('a').name.map
-pl.col('a').str.ljust
-pl.col('a').str.rjust
+pl.avg
+df.groupby_dynamic
+df.groupby_rolling
+df.rolling('ts').apply
+pl.col('a').rolling_apply
+pl.col('a').apply
+pl.col('a').map
+pl.col('a').is_not
+pl.map
+pl.apply
+pl.enable_string_cache(True)
+pl.enable_string_cache(False)
+pl.col('a').list.count_match
+pl.col('a').is_last
+pl.col('a').is_first
+pl.col('a').str.strip
+pl.col('a').str.lstrip
+pl.col('a').str.rstrip
+pl.col('a').str.count_match
+df.group_by_dynamic('ts', truncate=True)
+df.group_by_dynamic('ts', truncate=False)
+pl.col('a').list.lengths
+pl.col('a').str.lengths
+pl.col('a').str.n_chars
+pl.col('a').keep_name
+pl.col('a').suffix
+pl.col('a').prefix
+pl.col('a').map_alias
+pl.col('a').str.l_just
+pl.col('a').str.r_just
 pl.col('a').dt.milliseconds
 pl.col('a').dt.microseconds
 pl.col('a').dt.nanoseconds
