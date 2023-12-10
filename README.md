@@ -18,9 +18,10 @@ pip install -U polars-upgrade
 
 Run
 ```
-polars-upgrade my_project --target-version=0.19.19  # replace with your version
+polars-upgrade my_project --target-version=0.19.19
 ```
-from the command line.
+from the command line. Replace `0.19.19` and `my_project` with your Polars version,
+and the name of your directory.
 
 ## Supported rewrites
 
