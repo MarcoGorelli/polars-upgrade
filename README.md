@@ -105,9 +105,9 @@ syntax.
 + pl.col('a').name.prefix
 - pl.col('a').map_alias
 + pl.col('a').name.map
-- pl.col('a').str.ljust
+- pl.col('a').str.l_just
 + pl.col('a').str.pad_end
-- pl.col('a').str.rjust
+- pl.col('a').str.r_just
 + pl.col('a').str.pad_start
 ```
 
