@@ -47,19 +47,18 @@ RENAMINGS = {
 }
 
 
-@register(ast.Call)
-def visit_Call(
+@register(ast.Attribute)
+def visit_Attribute(
         state: State,
-        node: ast.Call,
+        node: ast.Attribute,
         parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            isinstance(node.func, ast.Attribute) and
-            isinstance(node.func.value, ast.Call) and
-            is_simple_expression(node.func.value, state.aliases) and
-            node.func.attr in RENAMINGS
+            isinstance(node.value, ast.Call) and
+            is_simple_expression(node.value, state.aliases) and
+            node.attr in RENAMINGS
     ):
-        min_version, new_name = RENAMINGS[node.func.attr]
+        min_version, new_name = RENAMINGS[node.attr]
         if state.settings.current_version >= min_version:
-            func = functools.partial(rename, name=node.func.attr, new=new_name)
+            func = functools.partial(rename, name=node.attr, new=new_name)
             yield ast_to_offset(node), func
