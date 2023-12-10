@@ -27,8 +27,8 @@ pl.col('a').keep_name
 pl.col('a').suffix
 pl.col('a').prefix
 pl.col('a').map_alias
-pl.col('a').str.l_just
-pl.col('a').str.r_just
+pl.col('a').str.ljust
+pl.col('a').str.rjust
 pl.col('a').dt.milliseconds
 pl.col('a').dt.microseconds
 pl.col('a').dt.nanoseconds

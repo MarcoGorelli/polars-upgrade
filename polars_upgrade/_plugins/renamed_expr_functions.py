@@ -27,7 +27,6 @@ def rename(
 
 
 RENAMINGS = {
-    'map_dict': ((0, 19, 16), 'replace'),
     'cumcount': ((0, 19, 14), 'cum_count'),
     'cummax': ((0, 19, 14), 'cum_max'),
     'cummin': ((0, 19, 14), 'cum_min'),
@@ -40,7 +39,7 @@ RENAMINGS = {
     'rolling_apply': ((0, 19, 0), 'rolling_map'),
     'apply': ((0, 19, 0), 'map_elements'),
     'map': ((0, 19, 0), 'map_batches'),
-    'is_not': ((0, 19, 0), 'not_'),
+    'is_not': ((0, 19, 2), 'not_'),
     'keep_name': ((0, 19, 12), 'name.keep'),
     'suffix': ((0, 19, 12), 'name.suffix'),
     'prefix': ((0, 19, 12), 'name.prefix'),

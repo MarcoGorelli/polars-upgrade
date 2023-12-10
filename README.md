@@ -38,20 +38,24 @@ syntax.
 + df.group_by_dynamic
 - df.groupby_rolling
 + df.rolling
-- df.rolling('ts').apply
-+ df.rolling('ts').map_groups
+- df.rolling('ts', period='3d').apply
++ df.rolling('ts', period='3d').map_groups
 - pl.col('a').rolling_apply
 + pl.col('a').rolling_map
 - pl.col('a').apply
 + pl.col('a').map_elements
 - pl.col('a').map
 + pl.col('a').map_batches
-- pl.col('a').is_not
-+ pl.col('a').not_
 - pl.map
 + pl.map_batches
 - pl.apply
 + pl.map_groups
+```
+
+### Version 0.19.2+
+```diff
+- pl.col('a').is_not
++ pl.col('a').not_
 ```
 
 ### Version 0.19.3+
@@ -79,10 +83,10 @@ syntax.
 
 ### Version 0.19.4+
 ```diff
-- df.group_by_dynamic('ts', truncate=True)
-+ df.group_by_dynamic('ts', label='left')
-- df.group_by_dynamic('ts', truncate=False)
-+ df.group_by_dynamic('ts', label='datapoint')
+- df.group_by_dynamic('ts', every='3d', truncate=True)
++ df.group_by_dynamic('ts', every='3d', label='left')
+- df.group_by_dynamic('ts', every='3d', truncate=False)
++ df.group_by_dynamic('ts', every='3d', label='datapoint')
 ```
 
 ### Version 0.19.8+
@@ -105,9 +109,9 @@ syntax.
 + pl.col('a').name.prefix
 - pl.col('a').map_alias
 + pl.col('a').name.map
-- pl.col('a').str.l_just
+- pl.col('a').str.ljust
 + pl.col('a').str.pad_end
-- pl.col('a').str.r_just
+- pl.col('a').str.rjust
 + pl.col('a').str.pad_start
 ```
 

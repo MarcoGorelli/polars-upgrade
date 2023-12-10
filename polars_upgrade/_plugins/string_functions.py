@@ -33,8 +33,8 @@ RENAMINGS = {
     'count_match': ((0, 19, 3), 'count_matches'),
     'lengths': ((0, 19, 8), 'len_bytes'),
     'n_chars': ((0, 19, 8), 'len_chars'),
-    'l_just': ((0, 19, 12), 'pad_end'),
-    'r_just': ((0, 19, 12), 'pad_start'),
+    'ljust': ((0, 19, 12), 'pad_end'),
+    'rjust': ((0, 19, 12), 'pad_start'),
     'json_extract': ((0, 19, 15), 'json_decode'),
 }
 
