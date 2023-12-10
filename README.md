@@ -95,6 +95,32 @@ syntax.
 + pl.col('a').str.len_chars
 ```
 
+### Version 0.19.12+
+```diff
+- pl.col('a').keep_name
++ pl.col('a').name.keep
+- pl.col('a').suffix
++ pl.col('a').name.suffix
+- pl.col('a').prefix
++ pl.col('a').name.prefix
+- pl.col('a').map_alias
++ pl.col('a').name.map
+- pl.col('a').str.ljust
++ pl.col('a').str.pad_end
+- pl.col('a').str.rjust
++ pl.col('a').str.pad_start
+```
+
+### Version 0.19.13
+```diff
+- pl.col('a').dt.milliseconds
++ pl.col('a').dt.total_milliseconds
+- pl.col('a').dt.microseconds
++ pl.col('a').dt.total_microseconds
+- pl.col('a').dt.nanoseconds
++ pl.col('a').dt.total_nanoseconds
+```
+(and so on for other units)
 
 ## Notes
 
