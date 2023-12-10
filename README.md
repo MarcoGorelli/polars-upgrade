@@ -9,22 +9,18 @@ Automatically upgrade your Polars code so it's compatible with future versions.
 
 ## Installation
 
+Easy:
 ```
 pip install -U polars-upgrade
 ```
 
 ## Usage
 
-Suppose you have a codebase which works with, say, Polars 0.18.4.
-You'd like to upgrade it to the latest syntax, so that you're no longer using
-deprecated method names.
-
-All you need to do is:
+Run
 ```
-polars-upgrade my_project --target-version=0.18.4
+polars-upgrade my_project --target-version=0.19.19  # replace with your version
 ```
-and `polars-upgrade` will automatically upgrade all Python files in `my_project` to use the newer Polars
-syntax.
+from the command line.
 
 ## Supported rewrites
 
