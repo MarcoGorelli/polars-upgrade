@@ -26,28 +26,25 @@ def rename(
     tokens[i] = tokens[i]._replace(src=new_name)
 
 
-@register(ast.Call)
-def visit_Call(
+@register(ast.Attribute)
+def visit_Attribute(
         state: State,
-        node: ast.Call,
+        node: ast.Attribute,
         parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
             state.settings.current_version >= (0, 19, 13) and
-            isinstance(node.func, ast.Attribute) and
-            isinstance(node.func.value, ast.Attribute) and
-            isinstance(node.func.value.value, ast.Call) and
-            is_simple_expression(node.func.value.value, state.aliases) and
-            node.func.value.attr == 'dt' and
-            node.func.attr in (
+            isinstance(node.value, ast.Attribute) and
+            is_simple_expression(node.value.value, state.aliases) and
+            node.value.attr == 'dt' and
+            node.attr in (
                 'nanoseconds', 'microseconds', 'milliseconds',
                 'seconds', 'minutes', 'hours', 'days', 'weeks',
-            ) and
-            len(node.args) == 0
+            )
     ):
-        new_attr = f'total_{node.func.attr}'
+        new_attr = f'total_{node.attr}'
         func = functools.partial(
-            rename, name=node.func.attr,
+            rename, name=node.attr,
             new_name=new_attr,
         )
-        yield ast_to_offset(node.func), func
+        yield ast_to_offset(node), func

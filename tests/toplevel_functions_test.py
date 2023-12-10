@@ -15,6 +15,12 @@ from polars_upgrade._main import _fix_plugins
             (0, 17, 0),
             id='too old',
         ),
+        pytest.param(
+            'import polars as pl\n'
+            'pl.col\n',
+            (0, 20, 0),
+            id='not deprecated',
+        ),
     ),
 )
 def test_fix_capture_output_noop(s, version):
