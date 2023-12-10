@@ -152,6 +152,18 @@ syntax.
 + pl.cum_sum_horizontal
 ```
 
+### Version 0.19.15+
+```diff
+- pl.col('a').str.json_extract
++ pl.col('a').str.json_decode
+```
+
+### Version 0.19.16
+```diff
+- pl.col('a').map_dict
++ pl.col('a').replace
+```
+
 ## Notes
 
 This work is derivative of [pyupgrade](https://github.com/asottile/pyupgrade) - many parts
