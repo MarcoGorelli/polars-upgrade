@@ -17,14 +17,34 @@ deprecated method names.
 
 All you need to do is:
 ```
-polars-upgrade file.py --current-version=0.18.4
+polars-upgrade my_project --current-version=0.18.4
 ```
-and `polars-upgrade` will automatically upgrade `file.py` to use the newer Polars
+and `polars-upgrade` will automatically upgrade all Python files in `my_project` to use the newer Polars
 syntax.
 
-You can also pass a directory, e.g.
-```
-polars-upgrade src --current-version=0.18.4
+## Supported rewrites
+
+### Version 0.19.0+
+
+```diff
+- df.groupby_dynamic
++ df.group_by_dynamic
+- df.groupby_rolling
++ df.rolling
+- df.group_by_rolling(...).apply
++ df.group_by_rolling(...).map_groups
+- pl.col('a').rolling_apply
++ pl.col('a').rolling_map
+- pl.col('a').apply
++ pl.col('a').map_elements
+- pl.col('a').map
++ pl.col('a').map_batches
+- pl.col('a').is_not
++ pl.col('a').not_
+- pl.map
++ pl.map_batches
+- pl.apply
++ pl.map_groups
 ```
 
 ## Notes
