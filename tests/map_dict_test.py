@@ -27,6 +27,12 @@ from polars_upgrade._main import _fix_plugins
             'import polars as pl\n'
             'pl.col("a").replace({2: 3}, default=3)\n',
         ),
+        pytest.param(
+            'import polars as pl\n'
+            'pl.col("a").map_dict({2: 3}, foo=3 )\n',
+            'import polars as pl\n'
+            'pl.col("a").replace({2: 3}, foo=3,  default=None)\n',
+        ),
     ),
 )
 def test_fix_capture_output(s, expected):
