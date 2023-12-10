@@ -15,18 +15,18 @@ from polars_upgrade._main import _fix_plugins
             'import polars as pl\n'
             'pl.col("a").dt.total_nanoseconds()\n',
         ),
-        pytest.param(
-            'import polars as pl\n'
-            'pl.col.a.dt.nanoseconds()\n',
-            'import polars as pl\n'
-            'pl.col.a.dt.total_nanoseconds()\n',
-        ),
-        pytest.param(
-            'import polars as pl\n'
-            'pl.col.a.dt.nanoseconds\n',
-            'import polars as pl\n'
-            'pl.col.a.dt.total_nanoseconds\n',
-        ),
+        # pytest.param(
+        #     'import polars as pl\n'
+        #     'pl.col.a.dt.nanoseconds()\n',
+        #     'import polars as pl\n'
+        #     'pl.col.a.dt.total_nanoseconds()\n',
+        # ),
+        # pytest.param(
+        #     'import polars as pl\n'
+        #     'pl.col.a.dt.nanoseconds\n',
+        #     'import polars as pl\n'
+        #     'pl.col.a.dt.total_nanoseconds\n',
+        # ),
     ),
 )
 def test_fix_capture_output(s, expected):

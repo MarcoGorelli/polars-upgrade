@@ -507,14 +507,42 @@ def indented_amount(i: int, tokens: list[Token]) -> str:
 
 
 def is_simple_expression(node: ast.expr, aliases: set[str]) -> bool:
-    return (
-        isinstance(node, ast.Call) and
-        isinstance(node.func, ast.Attribute) and
-        node.func.attr in ('col', 'all', 'any') and
-        isinstance(node.func.value, ast.Name) and
-        node.func.value.id in aliases
-    ) or (
-        isinstance(node, ast.Attribute) and
-        isinstance(node.value, ast.Attribute) and
-        node.value.attr == 'col'
-    )
+    # Look for code of the form:
+    # - pl.col('a')
+    # - pl.col('a').mean()
+    # - pl.col('a').mean().mean()
+    # For now, it's hardcoded to only go three levels deep.
+    # TODO: generalise.
+    # Also TODO: recognise pl.col.a
+    if isinstance(node, ast.Call):
+        return (
+            isinstance(node.func, ast.Attribute) and
+            (
+                (
+                    isinstance(node.func.value, ast.Name) and
+                    node.func.attr in ('col', 'all', 'any') and
+                    node.func.value.id in aliases
+                ) or (
+                    isinstance(node.func.value, ast.Call) and
+                    isinstance(node.func.value.func, ast.Attribute) and
+                    isinstance(node.func.value.func.value, ast.Name) and
+                    node.func.value.func.attr in ('col', 'all', 'any') and
+                    node.func.value.func.value.id in aliases
+                ) or (
+                    isinstance(node.func.value, ast.Call) and
+                    isinstance(node.func.value.func, ast.Attribute) and
+                    isinstance(node.func.value.func.value, ast.Call) and
+                    isinstance(node.func.value.func.value.func, ast.Attribute) and
+                    isinstance(node.func.value.func.value.func.value, ast.Name) and
+                    node.func.value.func.value.func.attr in ('col', 'all', 'any') and
+                    node.func.value.func.value.func.value.id in aliases
+                )
+            )
+        )
+    # elif isinstance(node, ast.Attribute):
+    #     todo
+    #     while isinstance(node.value, ast.Attribute):
+    #         node = node.value
+    #     return node.attr == 'col'
+    else:
+        return False

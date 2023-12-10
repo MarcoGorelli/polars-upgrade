@@ -54,7 +54,6 @@ def visit_Attribute(
         parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            isinstance(node.value, ast.Call) and
             is_simple_expression(node.value, state.aliases) and
             node.attr in RENAMINGS
     ):
