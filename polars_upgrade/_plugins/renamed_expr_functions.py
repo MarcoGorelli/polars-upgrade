@@ -30,6 +30,7 @@ RENAMINGS = {
     'map_dict': ((0, 19, 16), 'replace'),
     'cumcount': ((0, 19, 14), 'cum_count'),
     'cummax': ((0, 19, 14), 'cum_max'),
+    'cummin': ((0, 19, 14), 'cum_min'),
     'cumprod': ((0, 19, 14), 'cum_prod'),
     'cumsum': ((0, 19, 14), 'cum_sum'),
     'take': ((0, 19, 14), 'gather'),

@@ -122,6 +122,36 @@ syntax.
 ```
 (and so on for other units)
 
+### Version 0.19.14
+```diff
+- pl.col('a').list.take
++ pl.col('a').list.gather
+- pl.col('a').cumcount
++ pl.col('a').cum_count
+- pl.col('a').cummax
++ pl.col('a').cum_max
+- pl.col('a').cummin
++ pl.col('a').cum_min
+- pl.col('a').cumprod
++ pl.col('a').cum_prod
+- pl.col('a').cumsum
++ pl.col('a').cum_sum
+- pl.col('a').cumcount
++ pl.col('a').cum_count
+- pl.col('a').take
++ pl.col('a').gather
+- pl.col('a').take_every
++ pl.col('a').gather_every
+- pl.cumsum
++ pl.cum_sum
+- pl.cumfold
++ pl.cum_fold
+- pl.cumreduce
++ pl.cum_reduce
+- pl.cumsum_horizontal
++ pl.cum_sum_horizontal
+```
+
 ## Notes
 
 This work is derivative of [pyupgrade](https://github.com/asottile/pyupgrade) - many parts
