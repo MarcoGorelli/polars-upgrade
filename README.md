@@ -77,6 +77,24 @@ syntax.
 + pl.col('a').str.count_matches
 ```
 
+### Version 0.19.4+
+```diff
+- df.group_by_dynamic('ts', truncate=True)
++ df.group_by_dynamic('ts', label='left')
+- df.group_by_dynamic('ts', truncate=False)
++ df.group_by_dynamic('ts', label='datapoint')
+```
+
+### Version 0.19.8+
+```diff
+- pl.col('a').list.lengths
++ pl.col('a').list.len
+- pl.col('a').str.lengths
++ pl.col('a').str.len_bytes
+- pl.col('a').str.n_chars
++ pl.col('a').str.len_chars
+```
+
 
 ## Notes
 
