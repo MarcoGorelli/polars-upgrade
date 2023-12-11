@@ -512,7 +512,7 @@ def is_simple_expression(node: ast.expr, aliases: set[str]) -> bool:
             node = node.func
         elif (
             isinstance(node, ast.Attribute) and
-            node.attr in ('col', 'all', 'any') and
+            node.attr.islower() and
             isinstance(node.value, ast.Name) and
             node.value.id in aliases
         ):
