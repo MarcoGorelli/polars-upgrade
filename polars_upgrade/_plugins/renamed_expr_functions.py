@@ -55,7 +55,11 @@ def visit_Attribute(
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
             is_simple_expression(node.value, state.aliases) and
-            node.attr in RENAMINGS
+            node.attr in RENAMINGS and
+            not (
+                isinstance(node.value, ast.Attribute) and
+                node.value.attr in ('list', 'name', 'str', 'struct', 'dt')
+            )
     ):
         min_version, new_name = RENAMINGS[node.attr]
         if state.settings.target_version >= min_version:

@@ -14,6 +14,11 @@ from polars_upgrade._main import _fix_plugins
             'pl.col("a").cumsum()\n',
             (0, 19, 0),
         ),
+        pytest.param(
+            'import polars as pl\n'
+            'pl.col("a").name.suffix("b")\n',
+            (0, 20, 0),
+        ),
     ),
 )
 def test_fix_capture_output_noop(s, version):
@@ -28,6 +33,18 @@ def test_fix_capture_output_noop(s, version):
             'pl.col("a").cumsum()\n',
             'import polars as pl\n'
             'pl.col("a").cum_sum()\n',
+        ),
+        pytest.param(
+            'import polars as pl\n'
+            'pl.col("a").mean().std().suffix("b")\n',
+            'import polars as pl\n'
+            'pl.col("a").mean().std().name.suffix("b")\n',
+        ),
+        pytest.param(
+            'import polars as pl\n'
+            'pl.col.a.mean().std().suffix("b")\n',
+            'import polars as pl\n'
+            'pl.col.a.mean().std().name.suffix("b")\n',
         ),
     ),
 )
