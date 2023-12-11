@@ -23,6 +23,9 @@ polars-upgrade my_project --target-version=0.19.19
 from the command line. Replace `0.19.19` and `my_project` with your Polars version,
 and the name of your directory.
 
+NOTE: this tool will modify your code!
+You're advised to stage your files before running it.
+
 ## Supported rewrites
 
 ### Version 0.18.12+
