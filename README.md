@@ -83,6 +83,8 @@ You're advised to stage your files before running it.
 + pl.col('a').str.strip_chars_end
 - pl.col('a').str.count_match
 + pl.col('a').str.count_matches
+- pl.col("dt").dt.offset_by("1mo_saturating")
++ pl.col("dt").dt.offset_by("1mo")
 ```
 
 ### Version 0.19.4+
