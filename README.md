@@ -105,6 +105,12 @@ You're advised to stage your files before running it.
 + pl.col('a').str.len_chars
 ```
 
+### Version 0.19.11+
+```diff
+- pl.col('a').shift(periods=4)
++ pl.col('a').shift(n=4)
+```
+
 ### Version 0.19.12+
 ```diff
 - pl.col('a').keep_name
