@@ -34,6 +34,7 @@ def rename(
     tokens[idx] = tokens[idx]._replace(src=tokens[idx].src.replace(old, new))
 
 
+# function name -> (min_version, old, new)
 RENAMINGS = {
     'shift': ((0, 19, 11), 'periods', 'n'),
 }

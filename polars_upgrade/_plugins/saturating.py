@@ -17,7 +17,7 @@ def myfunc(
     i: int,
     tokens: list[Token],
 ) -> None:
-    tokens[i] = tokens[i]._replace(src=tokens[i].src.replace('mo_saturating', 'mo'))
+    tokens[i] = tokens[i]._replace(src=tokens[i].src.replace('mo', 'mo'))
 
 
 @register(ast.Constant)
@@ -27,7 +27,7 @@ def visit_Constant(
         parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            isinstance(node.value, str) and node.value.endswith('mo_saturating') and
+            isinstance(node.value, str) and node.value.endswith('mo') and
             isinstance(parent, (ast.Call, ast.keyword)) and
             state.settings.target_version >= (0, 19, 3)
     ):
