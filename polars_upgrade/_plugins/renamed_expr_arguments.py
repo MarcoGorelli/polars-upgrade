@@ -37,6 +37,11 @@ def rename(
 # function name -> (min_version, old, new)
 RENAMINGS = {
     'shift': ((0, 19, 11), 'periods', 'n'),
+    'any': ((0, 19, 0), 'drop_nulls', 'ignore_nulls'),
+    'all': ((0, 19, 0), 'drop_nulls', 'ignore_nulls'),
+    'value_counts': ((0, 19, 0), 'multithreaded', 'parallel'),
+    'shift_and_fill': ((0, 19, 11), 'periods', 'n'),
+    'map_dict': ((0, 19, 16), 'remapping', 'mapping'),
 }
 
 
@@ -50,7 +55,11 @@ def visit_Attribute(
             is_simple_expression(node.value, state.aliases) and
             isinstance(parent, ast.Call) and
             isinstance(parent.func, ast.Attribute) and
-            parent.func.attr in RENAMINGS
+            parent.func.attr in RENAMINGS and
+            not (
+                isinstance(node.value, ast.Attribute) and
+                node.value.attr in ('list', 'name', 'str', 'struct', 'dt')
+            )
     ):
         min_version, old, new = RENAMINGS[parent.func.attr]
         for keyword in parent.keywords:

@@ -54,6 +54,12 @@ You're advised to stage your files before running it.
 + pl.map_batches
 - pl.apply
 + pl.map_groups
+- pl.col('a').any(drop_nulls=True)
++ pl.col('a').any(ignore_nulls=True)
+- pl.col('a').all(drop_nulls=True)
++ pl.col('a').all(ignore_nulls=True)
+- pl.col('a').value_counts(multithreaded=True)
++ pl.col('a').value_counts(parallel=True)
 ```
 
 ### Version 0.19.2+
@@ -109,6 +115,8 @@ You're advised to stage your files before running it.
 ```diff
 - pl.col('a').shift(periods=4)
 + pl.col('a').shift(n=4)
+- pl.col('a').map_dict(remapping={1: 2})
++ pl.col('a').map_dict(mapping={1: 2})
 ```
 
 ### Version 0.19.12+
