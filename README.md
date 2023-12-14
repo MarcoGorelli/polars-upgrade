@@ -115,6 +115,10 @@ You're advised to stage your files before running it.
 ```diff
 - pl.col('a').shift(periods=4)
 + pl.col('a').shift(n=4)
+- pl.col('a').shift_and_fill(periods=4)
++ pl.col('a').shift_and_fill(n=4)
+- pl.col('a').list.shift(periods=4)
++ pl.col('a').list.shift(n=4)
 - pl.col('a').map_dict(remapping={1: 2})
 + pl.col('a').map_dict(mapping={1: 2})
 ```
@@ -174,6 +178,8 @@ You're advised to stage your files before running it.
 + pl.cum_reduce
 - pl.cumsum_horizontal
 + pl.cum_sum_horizontal
+- pl.col('a').list.take(index=[1, 2])
++ pl.col('a').list.take(indices=[1, 2])
 ```
 
 ### Version 0.19.15+
