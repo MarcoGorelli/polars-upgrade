@@ -137,6 +137,12 @@ You're advised to stage your files before running it.
 + pl.col('a').str.pad_end
 - pl.col('a').str.rjust
 + pl.col('a').str.pad_start
+- pl.col('a').zfill(alignment=3)
++ pl.col('a').zfill(length=3)
+- pl.col('a').ljust(width=3)
++ pl.col('a').ljust(length=3)
+- pl.col('a').rjust(width=3)
++ pl.col('a').rjust(length=3)
 ```
 
 ### Version 0.19.13
@@ -180,6 +186,8 @@ You're advised to stage your files before running it.
 + pl.cum_sum_horizontal
 - pl.col('a').list.take(index=[1, 2])
 + pl.col('a').list.take(indices=[1, 2])
+- pl.col('a').str.parse_int(radix=1)
++ pl.col('a').str.parse_int(base=1)
 ```
 
 ### Version 0.19.15+
