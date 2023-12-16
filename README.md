@@ -32,7 +32,7 @@ You're advised to stage your files before running it.
 -   repo: https://github.com/MarcoGorelli/polars-upgrade
     rev: v0.1.14
     hooks:
-    -   id: absolufy-imports
+    -   id: polars-upgrade
 ```
 
 ## Supported rewrites
