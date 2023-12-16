@@ -30,10 +30,10 @@ You're advised to stage your files before running it.
 
 ```yaml
 -   repo: https://github.com/MarcoGorelli/polars-upgrade
-    rev: 0.1.19
+    rev: 0.1.19  # polars-upgrade version goes here
     hooks:
     -   id: polars-upgrade
-        args: [--target-version=0.20.0]
+        args: [--target-version=0.20.0]  # Polars version goes here
 ```
 
 ## Supported rewrites
