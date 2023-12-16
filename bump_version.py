@@ -29,6 +29,15 @@ content = content.replace(
 with open('polars_upgrade/__init__.py', 'w', encoding='utf-8') as f:
     f.write(content)
 
+with open('README.md', encoding='utf-8') as f:
+    content = f.read()
+content = content.replace(
+    f'rev: v"{old_version}"',
+    f'rev: v"{version}"',
+)
+with open('README.md', 'w', encoding='utf-8') as f:
+    f.write(content)
+
 subprocess.run(['git', 'commit', '-a', '-m', f'Bump version to {version}'])
 subprocess.run(['git', 'tag', '-a', version, '-m', version])
 subprocess.run(['git', 'push', '--follow-tags'])

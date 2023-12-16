@@ -1,0 +1,6 @@
+-   id: polars-upgrade
+    name: polars-upgrade
+    description: Automatically upgrade Polars syntax for newer versions.
+    entry: polars-upgrade
+    language: python
+    types: [python]

@@ -14,7 +14,7 @@ Easy:
 pip install -U polars-upgrade
 ```
 
-## Usage
+## Usage (command-line)
 
 Run
 ```
@@ -25,6 +25,15 @@ and the name of your directory.
 
 NOTE: this tool will modify your code!
 You're advised to stage your files before running it.
+
+## Usage (pre-commit hook)
+
+```yaml
+-   repo: https://github.com/MarcoGorelli/polars-upgrade
+    rev: v0.1.14
+    hooks:
+    -   id: absolufy-imports
+```
 
 ## Supported rewrites
 
