@@ -30,7 +30,7 @@ You're advised to stage your files before running it.
 
 ```yaml
 -   repo: https://github.com/MarcoGorelli/polars-upgrade
-    rev: 0.1.18
+    rev: 0.1.19
     hooks:
     -   id: polars-upgrade
         args: [--target-version=0.20.0]
