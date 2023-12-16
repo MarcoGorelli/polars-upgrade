@@ -32,8 +32,8 @@ with open('polars_upgrade/__init__.py', 'w', encoding='utf-8') as f:
 with open('README.md', encoding='utf-8') as f:
     content = f.read()
 content = content.replace(
-    f'rev: v"{old_version}"',
-    f'rev: v"{version}"',
+    f'rev: v{old_version}',
+    f'rev: v{version}',
 )
 with open('README.md', 'w', encoding='utf-8') as f:
     f.write(content)
