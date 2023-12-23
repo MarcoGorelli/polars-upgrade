@@ -1,5 +1,5 @@
 <p align="center">
-<img width="200" src="https://github.com/MarcoGorelli/polars-upgrade/assets/33491632/a1c19baf-dbea-4c8e-8df4-cefbd07d150f", href="https://www.vecteezy.com/free-vector/bear">
+<img width="200" src="https://github.com/MarcoGorelli/polars-upgrade/assets/33491632/7a5f1023-7301-475f-98dd-18f5bde45706", href="https://www.vecteezy.com/free-vector/bear">
 </p>
 
 polars-upgrade
