@@ -226,6 +226,8 @@ You're advised to stage your files before running it.
 + pl.col('a').filter
 - pl.count()
 + pl.len()
+- pl.scan_ndjson(source, row_count_name='foo', row_count_offset=3)
++ pl.scan_ndjson(source, row_index_name='foo', row_index_offset=3)
 ```
 
 ### Version 0.20.11

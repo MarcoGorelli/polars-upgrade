@@ -35,7 +35,10 @@ def rename(
 
 # function name -> (min_version, old, new)
 RENAMINGS = {
-    'scan_ndjson': ((0, 20, 4), 'row_count_name', 'row_index_name'),
+    'scan_ndjson': [
+        ((0, 20, 4), 'row_count_name', 'row_index_name'),
+        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    ],
 }
 
 
@@ -52,15 +55,14 @@ def visit_Call(
             node.func.value.id in state.aliases and
             len(node.keywords) >= 1
     ):
-        min_version, old, new = RENAMINGS[node.func.attr]
-        if not state.settings.target_version >= min_version:
-            return
-        for keyword in node.keywords:
-            if keyword.arg == old:
-                break
-        else:
-            return
-        if state.settings.target_version >= min_version:
+        for min_version, old, new in RENAMINGS[node.func.attr]:
+            if not state.settings.target_version >= min_version:
+                continue
+            for keyword in node.keywords:
+                if keyword.arg == old:
+                    break
+            else:
+                continue
             func = functools.partial(
                 rename, line=keyword.lineno,
                 utf8_byte_offset=keyword.col_offset, old=old, new=new,
