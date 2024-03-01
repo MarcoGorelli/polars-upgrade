@@ -47,3 +47,5 @@ pl.cum_reduce
 pl.cum_sum_horizontal
 pl.col('a').str.json_decode
 pl.col('a').map_dict
+
+pl.col("b").filter

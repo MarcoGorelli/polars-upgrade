@@ -30,7 +30,7 @@ You're advised to stage your files before running it.
 
 ```yaml
 -   repo: https://github.com/MarcoGorelli/polars-upgrade
-    rev: 0.1.19  # polars-upgrade version goes here
+    rev: 0.2.0  # polars-upgrade version goes here
     hooks:
     -   id: polars-upgrade
         args: [--target-version=0.20.0]  # Polars version goes here
@@ -212,6 +212,12 @@ You're advised to stage your files before running it.
 + pl.col('a').replace({'a': 'b'}, default=None)
 - pl.col('a').map_dict({'a': 'b'}, default='c')
 + pl.col('a').replace({'a': 'b'}, default='c')
+```
+
+### Version 0.20.4
+```diff
+- pl.col('a').where
++ pl.col('a').filter
 ```
 
 ## Notes

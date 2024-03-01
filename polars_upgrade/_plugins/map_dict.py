@@ -1,3 +1,5 @@
+# not a renamed_expr_arguments candidate because we only rename
+# in some cases
 from __future__ import annotations
 
 import ast

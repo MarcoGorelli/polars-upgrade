@@ -44,6 +44,7 @@ RENAMINGS = {
     'suffix': ((0, 19, 12), 'name.suffix'),
     'prefix': ((0, 19, 12), 'name.prefix'),
     'map_alias': ((0, 19, 12), 'name.map'),
+    'where': ((0, 20, 4), 'filter'),
 }
 
 
