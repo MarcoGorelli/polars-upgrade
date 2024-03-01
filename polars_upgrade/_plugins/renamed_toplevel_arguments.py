@@ -39,6 +39,45 @@ RENAMINGS = {
         ((0, 20, 4), 'row_count_name', 'row_index_name'),
         ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
     ],
+    'read_csv': [
+        ((0, 19, 14), 'comment_char', 'comment_prefix'),
+        ((0, 20, 4), 'row_count_name', 'row_index_name'),
+        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    ],
+    'read_csv_batched': [
+        ((0, 19, 14), 'comment_char', 'comment_prefix'),
+        ((0, 20, 4), 'row_count_name', 'row_index_name'),
+        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    ],
+    'scan_csv': [
+        ((0, 19, 14), 'comment_char', 'comment_prefix'),
+        ((0, 20, 4), 'row_count_name', 'row_index_name'),
+        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    ],
+    'read_ipc': [
+        ((0, 20, 4), 'row_count_name', 'row_index_name'),
+        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    ],
+    'read_ipc_stream': [
+        ((0, 20, 4), 'row_count_name', 'row_index_name'),
+        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    ],
+    'scan_ipc': [
+        ((0, 20, 4), 'row_count_name', 'row_index_name'),
+        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    ],
+    'read_parquet': [
+        ((0, 20, 4), 'row_count_name', 'row_index_name'),
+        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    ],
+    'scan_parquet': [
+        ((0, 20, 4), 'row_count_name', 'row_index_name'),
+        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    ],
+    'read_excel': [
+        ((0, 20, 6), 'xlsx2csv_options', 'engine_options'),
+        ((0, 20, 7), 'read_csv_options', 'read_options'),
+    ],
 }
 
 

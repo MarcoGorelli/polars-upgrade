@@ -228,7 +228,13 @@ You're advised to stage your files before running it.
 + pl.len()
 - pl.scan_ndjson(source, row_count_name='foo', row_count_offset=3)
 + pl.scan_ndjson(source, row_index_name='foo', row_index_offset=3)
+[...and similarly for `read_csv`, `read_csv_batched`, `scan_csv`, `read_ipc`, `read_ipc_stream`, `scan_ipc`, `read_parquet`, `scan_parquet`]
 ```
+
+### Version 0.20.6
+```diff
+- pl.read_excel(source, xlsx2csv_options=options, read_csv_options=read_options)
++ pl.scan_ndjson(source, engine_options=options, read_options=read_options)
 
 ### Version 0.20.11
 ```diff
