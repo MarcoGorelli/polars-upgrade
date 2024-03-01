@@ -1,9 +1,9 @@
-<p align="center">
-<img width="200" src="https://github.com/MarcoGorelli/polars-upgrade/assets/33491632/7a5f1023-7301-475f-98dd-18f5bde45706", href="https://www.vecteezy.com/free-vector/bear">
-</p>
-
 polars-upgrade
 ==============
+
+<p align="center">
+<img width="200" src="https://github.com/MarcoGorelli/polars-upgrade/assets/33491632/91a50994-af5d-4abd-8e9f-e3125258c167">
+</p>
 
 Automatically upgrade your Polars code so it's compatible with future versions.
 
