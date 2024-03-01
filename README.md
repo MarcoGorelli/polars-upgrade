@@ -234,7 +234,7 @@ You're advised to stage your files before running it.
 ### Version 0.20.6
 ```diff
 - pl.read_excel(source, xlsx2csv_options=options, read_csv_options=read_options)
-+ pl.scan_ndjson(source, engine_options=options, read_options=read_options)
++ pl.read_excel(source, engine_options=options, read_options=read_options)
 ```
 
 ### Version 0.20.7
