@@ -53,3 +53,5 @@ pl.col('a').meta.serialize
 df.write_database(foo, if_table_exists='append')
 
 pl.len()
+
+pl.scan_ndjson(a, row_index_name='a')
