@@ -214,6 +214,12 @@ You're advised to stage your files before running it.
 + pl.col('a').replace({'a': 'b'}, default='c')
 ```
 
+### Version 0.20.0
+```diff
+- df.write_database(table_name='foo', if_exists="append")
++ df.write_database(table_name='foo', if_table_exists="append")
+```
+
 ### Version 0.20.4
 ```diff
 - pl.col('a').where

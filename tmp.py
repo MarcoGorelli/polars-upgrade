@@ -49,3 +49,5 @@ pl.col('a').str.json_decode
 pl.col('a').map_dict
 
 pl.col('a').meta.serialize
+
+df.write_database(foo, if_table_exists='append')

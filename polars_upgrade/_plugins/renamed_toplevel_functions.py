@@ -14,9 +14,9 @@ from polars_upgrade._token_helpers import replace_name
 
 RENAMINGS = {
     'avg': ((0, 18, 12), 'mean'),
-    'map': ((0, 19, 0), 'map_batches'),  # 0.19.0
+    'map': ((0, 19, 0), 'map_batches'),
     'apply': ((0, 19, 0), 'map_groups'),
-    'cumsum': ((0, 19, 14), 'cum_sum'),  # 0.19.14
+    'cumsum': ((0, 19, 14), 'cum_sum'),
     'cumfold': ((0, 19, 14), 'cum_fold'),
     'cumreduce': ((0, 19, 14), 'cum_reduce'),
     'cumsum_horizontal': ((0, 19, 14), 'cum_sum_horizontal'),
