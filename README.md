@@ -235,6 +235,13 @@ You're advised to stage your files before running it.
 ```diff
 - pl.read_excel(source, xlsx2csv_options=options, read_csv_options=read_options)
 + pl.scan_ndjson(source, engine_options=options, read_options=read_options)
+```
+
+### Version 0.20.7
+```diff
+- pl.threadpool_size
++ pl.thread_pool_size
+```
 
 ### Version 0.20.11
 ```diff

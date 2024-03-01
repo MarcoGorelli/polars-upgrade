@@ -20,6 +20,7 @@ RENAMINGS = {
     'cumfold': ((0, 19, 14), 'cum_fold'),
     'cumreduce': ((0, 19, 14), 'cum_reduce'),
     'cumsum_horizontal': ((0, 19, 14), 'cum_sum_horizontal'),
+    'threadpool_size': ((0, 20, 7), 'thread_pool_size'),
 }
 
 
