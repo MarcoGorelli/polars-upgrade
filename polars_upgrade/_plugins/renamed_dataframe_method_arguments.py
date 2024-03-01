@@ -11,7 +11,6 @@ from polars_upgrade._ast_helpers import ast_to_offset
 from polars_upgrade._data import register
 from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
-from polars_upgrade._token_helpers import is_simple_expression
 
 
 def rename(
