@@ -224,6 +224,8 @@ You're advised to stage your files before running it.
 ```diff
 - pl.col('a').where
 + pl.col('a').filter
+- pl.count()
++ pl.len()
 ```
 
 ### Version 0.20.11
