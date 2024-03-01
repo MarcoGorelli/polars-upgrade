@@ -27,7 +27,7 @@ def rename(
 
 
 RENAMINGS = {
-    'write_json': ((0, 20, 11), 'write_json'),
+    'write_json': ((0, 20, 11), 'serialize'),
 }
 
 
@@ -40,7 +40,7 @@ def visit_Attribute(
     if (
             isinstance(node.value, ast.Attribute) and
             is_simple_expression(node.value.value, state.aliases) and
-            node.value.attr == 'list' and
+            node.value.attr == 'meta' and
             node.attr in RENAMINGS
     ):
         min_version, new_name = RENAMINGS[node.attr]

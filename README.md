@@ -220,6 +220,12 @@ You're advised to stage your files before running it.
 + pl.col('a').filter
 ```
 
+### Version 0.20.11
+```diff
+- pl.col('a').meta.write_json
++ pl.col('a').meta.serialize
+```
+
 ## Notes
 
 This work is derivative of [pyupgrade](https://github.com/asottile/pyupgrade) - many parts
