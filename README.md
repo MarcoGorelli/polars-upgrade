@@ -18,9 +18,9 @@ pip install -U polars-upgrade
 
 Run
 ```
-polars-upgrade my_project --target-version=0.20.0
+polars-upgrade my_project --target-version=0.20.4
 ```
-from the command line. Replace `0.20.0` and `my_project` with your Polars version,
+from the command line. Replace `0.20.4` and `my_project` with your Polars version,
 and the name of your directory.
 
 NOTE: this tool will modify your code!
@@ -34,6 +34,13 @@ You're advised to stage your files before running it.
     hooks:
     -   id: polars-upgrade
         args: [--target-version=0.20.0]  # Polars version goes here
+```
+
+## Usage (Jupyter Notebooks)
+
+Install [nbqa](https://github.com/nbQA-dev/nbQA) and then run
+```
+nbqa polars_upgrade my_project --target-version=0.20.4
 ```
 
 ## Supported rewrites
@@ -226,6 +233,8 @@ You're advised to stage your files before running it.
 + pl.col('a').filter
 - pl.count()
 + pl.len()
+- df.with_row_count('row_number')
++ df.with_row_index('row_number')
 - pl.scan_ndjson(source, row_count_name='foo', row_count_offset=3)
 + pl.scan_ndjson(source, row_index_name='foo', row_index_offset=3)
 [...and similarly for `read_csv`, `read_csv_batched`, `scan_csv`, `read_ipc`, `read_ipc_stream`, `scan_ipc`, `read_parquet`, `scan_parquet`]

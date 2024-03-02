@@ -4,3 +4,4 @@
 /.tox
 .venv
 tmp.py
+*.qmd
