@@ -262,6 +262,8 @@ nbqa polars_upgrade my_project --target-version=0.20.4
 ```diff
 - pl.col('a').meta.write_json
 + pl.col('a').meta.serialize
+- lf.approx_n_unique()
++ lf.select(pl.all().approx_n_unique())
 ```
 
 ## Notes
