@@ -240,6 +240,12 @@ nbqa polars_upgrade my_project --target-version=0.20.4
 [...and similarly for `read_csv`, `read_csv_batched`, `scan_csv`, `read_ipc`, `read_ipc_stream`, `scan_ipc`, `read_parquet`, `scan_parquet`]
 ```
 
+### Version 0.20.5
+```diff
+- df.pivot(index=index, values=values, columns=columns, aggregate_function='count')
++ df.pivot(index=index, values=values, columns=columns, aggregate_function='len')
+```
+
 ### Version 0.20.6
 ```diff
 - pl.read_excel(source, xlsx2csv_options=options, read_csv_options=read_options)
