@@ -42,9 +42,9 @@ def test_fix_capture_output_noop(s, version):
         ),
         pytest.param(
             'import polars as pl\n'
-            'df.pivot(a, index=b+c, columns=c)\n',
+            'df.pivot(a, b+c, c)\n',
             'import polars as pl\n'
-            'df.pivot(values=a, index=b+c, columns=c)\n',
+            'df.pivot(values=a, b+c, c)\n',
         ),
         pytest.param(
             'import polars as pl\n'
@@ -62,6 +62,14 @@ def test_fix_capture_output_noop(s, version):
             'import pandas as pd\n'
             'import polars as pl\n'
             'df.pivot("a", index=b, columns="c", aggregate_function="sum")\n',
+            'import pandas as pd\n'
+            'import polars as pl\n'
+            'df.pivot(values="a", index=b, columns="c", aggregate_function="sum")\n',
+        ),
+        pytest.param(
+            'import pandas as pd\n'
+            'import polars as pl\n'
+            'df.pivot("a", b, "c", "sum")\n',
             'import pandas as pd\n'
             'import polars as pl\n'
             'df.pivot(values="a", index=b, columns="c", aggregate_function="sum")\n',

@@ -33,7 +33,7 @@ def rename(
     tokens[idx] = tokens[idx]._replace(src=tokens[idx].src.replace(old, new))
 
 
-KWARGS = ['values', 'index', 'columns']
+KWARGS = ['values', 'index', 'columns', 'aggregate_function']
 
 
 @register(ast.Call)
@@ -53,13 +53,12 @@ def visit_Call(
                     kwarg in [kw.arg for kw in node.keywords] for kwarg in
                     ['aggregate_function', 'separator', 'sort_columns', 'maintain_order']
                 ) or
+                len(node.args) > 3 or
                 ('pd' not in state.aliases and 'pandas' not in state.aliases)
             ) and
             state.settings.target_version >= (0, 20, 8)
     ):
         for i, arg in enumerate(node.args):
-            if i >= 3:
-                return
             if isinstance(arg, ast.Name):
                 func = functools.partial(
                     rename, line=node.args[0].lineno,
