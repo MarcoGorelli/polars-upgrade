@@ -75,7 +75,7 @@ def visit(
 
         if isinstance(node, ast.Import):
             for import_ in node.names:
-                if import_.name == 'polars':
+                if import_.name in {'polars', 'pandas'}:
                     state.aliases.add(import_.asname or import_.name)
 
         for name in reversed(node._fields):

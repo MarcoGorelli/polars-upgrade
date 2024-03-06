@@ -70,6 +70,12 @@ def visit_Call(
                 func = functools.partial(
                     rename, line=node.args[0].lineno,
                     utf8_byte_offset=arg.col_offset,
+                    old=f"\"{arg.value}\"", new=f'{KWARGS[i]}="{arg.value}"',
+                )
+                yield ast_to_offset(node), func
+                func = functools.partial(
+                    rename, line=node.args[0].lineno,
+                    utf8_byte_offset=arg.col_offset,
                     old=f"'{arg.value}'", new=f'{KWARGS[i]}="{arg.value}"',
                 )
                 yield ast_to_offset(node), func
