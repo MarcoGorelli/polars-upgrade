@@ -45,7 +45,9 @@ def visit_Call(
     if (
             isinstance(node.func, ast.Attribute) and
             node.func.attr in RENAMINGS and
-            'pl' in state.aliases
+            'pl' in state.aliases and
+            not node.args and
+            not node.keywords
     ):
         min_version, new_name = RENAMINGS[node.func.attr]
         if state.settings.target_version >= min_version:
