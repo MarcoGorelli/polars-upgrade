@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import ast
 import keyword
+from collections.abc import Sequence
 from typing import NamedTuple
-from typing import Sequence
 
 from tokenize_rt import NON_CODING_TOKENS
 from tokenize_rt import Token

@@ -6,9 +6,8 @@ import pathlib
 import re
 import sys
 import tokenize
-from typing import Match
-from typing import Sequence
-from typing import Tuple
+from collections.abc import Sequence
+from re import Match
 
 from tokenize_rt import NON_CODING_TOKENS
 from tokenize_rt import parse_string_literal
@@ -344,7 +343,7 @@ def _fix_file(filename: str, args: argparse.Namespace) -> int:
     return contents_text != contents_text_orig
 
 
-Version = Tuple[int, ...]
+Version = tuple[int, ...]
 
 
 def main(argv: Sequence[str] | None = None) -> int:
