@@ -20,7 +20,7 @@ Version = Tuple[int, ...]
 
 
 class Settings(NamedTuple):
-    target_version: Version = (3,)
+    target_version: Version
 
 
 class State(NamedTuple):
@@ -55,9 +55,11 @@ def visit(
         funcs: ASTCallbackMapping,
         tree: ast.Module,
         settings: Settings,
+        aliases: set[str] | None = None,
 ) -> dict[Offset, list[TokenFunc]]:
     initial_state = State(
         settings=settings,
+        aliases=aliases or set(),
     )
 
     nodes: list[tuple[State, ast.AST, ast.AST]] = [(initial_state, tree, tree)]
