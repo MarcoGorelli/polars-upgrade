@@ -8,6 +8,7 @@ import sys
 import tokenize
 from typing import Match
 from typing import Sequence
+from typing import Tuple
 
 from tokenize_rt import NON_CODING_TOKENS
 from tokenize_rt import parse_string_literal
@@ -63,13 +64,13 @@ def _fixup_dedent_tokens(tokens: list[Token]) -> None:
             tokens[i], tokens[i + 1] = tokens[i + 1], tokens[i]
 
 
-def _fix_plugins(contents_text: str, settings: Settings) -> str:
+def fix_plugins(contents_text: str, settings: Settings, *, aliases: set[str] | None = None) -> str:
     try:
         ast_obj = ast_parse(contents_text)
     except SyntaxError:
         return contents_text
 
-    callbacks = visit(FUNCS, ast_obj, settings)
+    callbacks = visit(FUNCS, ast_obj, settings, aliases=aliases)
 
     if not callbacks:
         return contents_text
@@ -325,7 +326,7 @@ def _fix_file(filename: str, args: argparse.Namespace) -> int:
         print(f'{filename} is non-utf-8 (not supported)')
         return 1
 
-    contents_text = _fix_plugins(
+    contents_text = fix_plugins(
         contents_text,
         settings=Settings(
             target_version=args.target_version,
@@ -343,7 +344,7 @@ def _fix_file(filename: str, args: argparse.Namespace) -> int:
     return contents_text != contents_text_orig
 
 
-Version = tuple[int, ...]
+Version = Tuple[int, ...]
 
 
 def main(argv: Sequence[str] | None = None) -> int:

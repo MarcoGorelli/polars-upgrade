@@ -58,9 +58,8 @@ def visit_Call(
                 break
         else:
             return
-        if state.settings.target_version >= min_version:
-            func = functools.partial(
-                rename, line=keyword.lineno,
-                utf8_byte_offset=keyword.col_offset, old=old, new=new,
-            )
-            yield ast_to_offset(node), func
+        func = functools.partial(
+            rename, line=keyword.lineno,
+            utf8_byte_offset=keyword.col_offset, old=old, new=new,
+        )
+        yield ast_to_offset(node), func

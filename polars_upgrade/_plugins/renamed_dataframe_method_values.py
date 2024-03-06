@@ -58,14 +58,13 @@ def visit_Call(
             if keyword.arg == argument:
                 break
         else:
-            return
+            raise AssertionError('unreachable code, please report bug')
         if not isinstance(keyword.value, ast.Constant):
             return
         if keyword.value.value != old:
             return
-        if state.settings.target_version >= min_version:
-            func = functools.partial(
-                rename, line=keyword.lineno,
-                utf8_byte_offset=keyword.value.col_offset, old=old, new=new,
-            )
-            yield ast_to_offset(node), func
+        func = functools.partial(
+            rename, line=keyword.lineno,
+            utf8_byte_offset=keyword.value.col_offset, old=old, new=new,
+        )
+        yield ast_to_offset(node), func
