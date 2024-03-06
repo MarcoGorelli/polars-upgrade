@@ -49,22 +49,3 @@ df.select(polars.count())
     settings = Settings(target_version=(0, 20, 4))
     result = rewrite(src, settings=settings)
     assert result == result
-
-# If your snippet does _not_ include `import polars` or `import as pl`,
-# then you will also need to provide `pl` and/or `polars` to `aliases`, else `polars-upgrade` will
-# not perform the rewrite. Example:
-
-# ```python
-# from polars_upgrade import rewrite, Settings
-
-# src = """\
-# df.select(pl.count())
-# """
-# settings = Settings(target_version=(0, 20, 4))
-# output = rewrite(src, settings=settings, aliases={'pl'})
-# print(output)
-# ```
-# Output:
-# ```
-# df.select(pl.len())
-# ```
