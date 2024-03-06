@@ -15,6 +15,12 @@ from polars_upgrade._main import fix_plugins
             (0, 19, 19),
             id='too old',
         ),
+        pytest.param(
+            'import polars as pl\n'
+            'df.write_database(foo, if_table_exists="append")\n',
+            (0, 20, 11),
+            id='already rewritten',
+        ),
     ),
 )
 def test_fix_capture_output_noop(s, version):
