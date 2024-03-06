@@ -297,6 +297,12 @@ df.select(pl.len())
 + pl.thread_pool_size
 ```
 
+### Version 0.20.8
+```diff
+- df.pivot(a, b, c)
++ df.pivot(values=a, index=b, columns=c)
+```
+
 ### Version 0.20.11
 ```diff
 - pl.col('a').meta.write_json
