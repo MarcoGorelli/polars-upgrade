@@ -35,7 +35,7 @@ def visit_Attribute(
     if (
             state.settings.target_version >= (0, 19, 13) and
             isinstance(node.value, ast.Attribute) and
-            is_simple_expression(node.value.value, state.aliases) and
+            is_simple_expression(node.value.value, state.aliases['polars']) and
             node.value.attr == 'dt' and
             node.attr in (
                 'nanoseconds', 'microseconds', 'milliseconds',

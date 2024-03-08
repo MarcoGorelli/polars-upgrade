@@ -32,7 +32,7 @@ def visit_Attribute(
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
             isinstance(node.value, ast.Name) and
-            node.value.id in state.aliases and
+            node.value.id in state.aliases['polars'] and
             node.attr in RENAMINGS
     ):
         min_version, new_name = RENAMINGS[node.attr]

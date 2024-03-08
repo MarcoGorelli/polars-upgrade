@@ -47,7 +47,7 @@ def visit_Attribute(
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
             isinstance(node.value, ast.Attribute) and
-            is_simple_expression(node.value.value, state.aliases) and
+            is_simple_expression(node.value.value, state.aliases['polars']) and
             node.value.attr == 'str' and
             node.attr in RENAMINGS
     ):

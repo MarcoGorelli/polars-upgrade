@@ -45,7 +45,7 @@ def visit_Call(
     if (
             isinstance(node.func, ast.Attribute) and
             node.func.attr in RENAMINGS and
-            'pl' in state.aliases and
+            'pl' in state.aliases['polars'] and
             not node.args and
             not node.keywords
     ):

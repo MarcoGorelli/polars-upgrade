@@ -50,7 +50,7 @@ def visit_Attribute(
         parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            is_simple_expression(node.value, state.aliases) and
+            is_simple_expression(node.value, state.aliases['polars']) and
             isinstance(parent, ast.Call) and
             isinstance(parent.func, ast.Attribute) and
             parent.func.attr in RENAMINGS and

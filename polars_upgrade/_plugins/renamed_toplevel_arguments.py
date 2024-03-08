@@ -91,7 +91,7 @@ def visit_Call(
             isinstance(node.func, ast.Attribute) and
             node.func.attr in RENAMINGS and
             isinstance(node.func.value, ast.Name) and
-            node.func.value.id in state.aliases and
+            node.func.value.id in state.aliases['polars'] and
             len(node.keywords) >= 1
     ):
         for min_version, old, new in RENAMINGS[node.func.attr]:

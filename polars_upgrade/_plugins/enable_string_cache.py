@@ -52,7 +52,7 @@ def visit_Call(
             isinstance(node.func, ast.Attribute) and
             isinstance(node.func.value, ast.Name) and
             node.func.attr == 'enable_string_cache' and
-            node.func.value.id in state.aliases and
+            node.func.value.id in state.aliases['polars'] and
             len(node.args) == 1 and
             isinstance(node.args[0], ast.Constant)
     ):

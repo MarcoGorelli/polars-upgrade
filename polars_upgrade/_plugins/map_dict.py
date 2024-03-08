@@ -65,7 +65,7 @@ def visit_Call(
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
             isinstance(node.func, ast.Attribute) and
-            is_simple_expression(node.func.value, state.aliases) and
+            is_simple_expression(node.func.value, state.aliases['polars']) and
             node.func.attr == 'map_dict' and
             state.settings.target_version >= (0, 19, 16)
     ):

@@ -49,3 +49,13 @@ df.select(polars.count())
     settings = Settings(target_version=(0, 20, 4))
     result = rewrite(src, settings=settings)
     assert result == result
+
+
+def test_library_pandas() -> None:
+    src = """\
+df = (pd.concat(my_list).groupby('ITEM_ID').apply(lambda x: np.any(x['VALUE'].notnull())).\
+reset_index().rename(columns={0: 'HAS_DATA'}))
+"""
+    settings = Settings(target_version=(0, 20, 10))
+    result = rewrite(src, settings=settings)
+    assert result == src

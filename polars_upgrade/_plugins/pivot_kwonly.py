@@ -54,7 +54,7 @@ def visit_Call(
                     ['aggregate_function', 'separator', 'sort_columns', 'maintain_order']
                 ) or
                 len(node.args) > 3 or
-                ('pd' not in state.aliases and 'pandas' not in state.aliases)
+                ('pandas' not in state.aliases)
             ) and
             state.settings.target_version >= (0, 20, 8)
     ):

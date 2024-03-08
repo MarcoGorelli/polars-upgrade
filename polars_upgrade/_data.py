@@ -23,7 +23,7 @@ class Settings(NamedTuple):
 
 class State(NamedTuple):
     settings: Settings
-    aliases: dict[str, set[str]] = collections.defaultdict(set)
+    aliases: dict[str, set[str]]
     in_annotation: bool = False
 
 
@@ -63,8 +63,10 @@ def visit(
             aliases=_aliases,
         )
     else:
+        _aliases = collections.defaultdict(set)
         initial_state = State(
             settings=settings,
+            aliases=_aliases,
         )
 
     nodes: list[tuple[State, ast.AST, ast.AST]] = [(initial_state, tree, tree)]

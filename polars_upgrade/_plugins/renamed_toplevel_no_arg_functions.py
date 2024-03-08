@@ -26,7 +26,7 @@ def visit_Call(
     if (
             isinstance(node.func, ast.Attribute) and
             isinstance(node.func.value, ast.Name) and
-            node.func.value.id in state.aliases and
+            node.func.value.id in state.aliases['polars'] and
             node.func.attr in RENAMINGS and
             not node.args and
             not node.keywords
