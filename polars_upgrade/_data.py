@@ -23,7 +23,7 @@ class Settings(NamedTuple):
 
 class State(NamedTuple):
     settings: Settings
-    aliases: set[str] = set()
+    aliases: dict[str, set[str]] = collections.defaultdict(set)
     in_annotation: bool = False
 
 
@@ -55,10 +55,17 @@ def visit(
         settings: Settings,
         aliases: set[str] | None = None,
 ) -> dict[Offset, list[TokenFunc]]:
-    initial_state = State(
-        settings=settings,
-        aliases=aliases or set(),
-    )
+    if aliases is not None:
+        _aliases = collections.defaultdict(set)
+        _aliases['polars'].update(aliases)
+        initial_state = State(
+            settings=settings,
+            aliases=_aliases,
+        )
+    else:
+        initial_state = State(
+            settings=settings,
+        )
 
     nodes: list[tuple[State, ast.AST, ast.AST]] = [(initial_state, tree, tree)]
 
@@ -73,8 +80,10 @@ def visit(
 
         if isinstance(node, ast.Import):
             for import_ in node.names:
-                if import_.name in {'polars', 'pandas'}:
-                    state.aliases.add(import_.asname or import_.name)
+                if import_.name == 'polars':
+                    state.aliases['polars'].add(import_.asname or import_.name)
+                elif import_.name == 'pandas':
+                    state.aliases['pandas'].add(import_.asname or import_.name)
 
         for name in reversed(node._fields):
             value = getattr(node, name)
