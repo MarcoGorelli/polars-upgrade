@@ -7,21 +7,18 @@ from polars_upgrade._main import fix_plugins
 
 
 @pytest.mark.parametrize(
-    ('s', 'version'),
+    ("s", "version"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("a").list.shift(3)\n',
+            "import polars as pl\n" 'pl.col("a").list.shift(3)\n',
             (0, 19, 19),
         ),
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("a").list.shift(periods=3)\n',
+            "import polars as pl\n" 'pl.col("a").list.shift(periods=3)\n',
             (0, 19, 0),
         ),
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("a").list.shift(n=3)\n',
+            "import polars as pl\n" 'pl.col("a").list.shift(n=3)\n',
             (0, 19, 19),
         ),
     ),
@@ -31,13 +28,11 @@ def test_fix_capture_output_noop(s, version):
 
 
 @pytest.mark.parametrize(
-    ('s', 'expected'),
+    ("s", "expected"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("a").list.shift(periods=4)\n',
-            'import polars as pl\n'
-            'pl.col("a").list.shift(n=4)\n',
+            "import polars as pl\n" 'pl.col("a").list.shift(periods=4)\n',
+            "import polars as pl\n" 'pl.col("a").list.shift(n=4)\n',
         ),
     ),
 )

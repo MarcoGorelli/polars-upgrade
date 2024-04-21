@@ -36,30 +36,30 @@ def rename(
 
 # function name -> (min_version, old, new)
 RENAMINGS = {
-    'shift': ((0, 19, 11), 'periods', 'n'),
-    'any': ((0, 19, 0), 'drop_nulls', 'ignore_nulls'),
-    'all': ((0, 19, 0), 'drop_nulls', 'ignore_nulls'),
-    'value_counts': ((0, 19, 0), 'multithreaded', 'parallel'),
-    'shift_and_fill': ((0, 19, 11), 'periods', 'n'),
-    'map_dict': ((0, 19, 16), 'remapping', 'mapping'),
+    "shift": ((0, 19, 11), "periods", "n"),
+    "any": ((0, 19, 0), "drop_nulls", "ignore_nulls"),
+    "all": ((0, 19, 0), "drop_nulls", "ignore_nulls"),
+    "value_counts": ((0, 19, 0), "multithreaded", "parallel"),
+    "shift_and_fill": ((0, 19, 11), "periods", "n"),
+    "map_dict": ((0, 19, 16), "remapping", "mapping"),
 }
 
 
 @register(ast.Attribute)
 def visit_Attribute(
-        state: State,
-        node: ast.Attribute,
-        parent: ast.AST,
+    state: State,
+    node: ast.Attribute,
+    parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            is_simple_expression(node.value, state.aliases['polars']) and
-            isinstance(parent, ast.Call) and
-            isinstance(parent.func, ast.Attribute) and
-            parent.func.attr in RENAMINGS and
-            not (
-                isinstance(node.value, ast.Attribute) and
-                node.value.attr in ('list', 'name', 'str', 'struct', 'dt')
-            )
+        is_simple_expression(node.value, state.aliases["polars"])
+        and isinstance(parent, ast.Call)
+        and isinstance(parent.func, ast.Attribute)
+        and parent.func.attr in RENAMINGS
+        and not (
+            isinstance(node.value, ast.Attribute)
+            and node.value.attr in ("list", "name", "str", "struct", "dt")
+        )
     ):
         min_version, old, new = RENAMINGS[parent.func.attr]
         for keyword in parent.keywords:
@@ -69,7 +69,10 @@ def visit_Attribute(
             return
         if state.settings.target_version >= min_version:
             func = functools.partial(
-                rename, line=keyword.lineno,
-                utf8_byte_offset=keyword.col_offset, old=old, new=new,
+                rename,
+                line=keyword.lineno,
+                utf8_byte_offset=keyword.col_offset,
+                old=old,
+                new=new,
             )
             yield ast_to_offset(parent), func

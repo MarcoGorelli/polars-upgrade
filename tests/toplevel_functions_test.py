@@ -7,19 +7,17 @@ from polars_upgrade._main import fix_plugins
 
 
 @pytest.mark.parametrize(
-    ('s', 'version'),
+    ("s", "version"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'pl.avg\n',
+            "import polars as pl\n" "pl.avg\n",
             (0, 17, 0),
-            id='too old',
+            id="too old",
         ),
         pytest.param(
-            'import polars as pl\n'
-            'pl.col\n',
+            "import polars as pl\n" "pl.col\n",
             (0, 20, 0),
-            id='not deprecated',
+            id="not deprecated",
         ),
     ),
 )
@@ -28,14 +26,12 @@ def test_fix_capture_output_noop(s, version):
 
 
 @pytest.mark.parametrize(
-    ('s', 'expected'),
+    ("s", "expected"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'pl.avg\n',
-            'import polars as pl\n'
-            'pl.mean\n',
-            id='top-level functions',
+            "import polars as pl\n" "pl.avg\n",
+            "import polars as pl\n" "pl.mean\n",
+            id="top-level functions",
         ),
     ),
 )

@@ -23,7 +23,7 @@ def test_library_aliases() -> None:
 df.select(pl.count())
 """
     settings = Settings(target_version=(0, 20, 4))
-    result = rewrite(src, settings=settings, aliases={'pl'})
+    result = rewrite(src, settings=settings, aliases={"pl"})
     expected = """\
 df.select(pl.len())
 """
@@ -35,7 +35,7 @@ def test_library_aliases_polars() -> None:
 df.select(polars.count())
 """
     settings = Settings(target_version=(0, 20, 4))
-    result = rewrite(src, settings=settings, aliases={'polars'})
+    result = rewrite(src, settings=settings, aliases={"polars"})
     expected = """\
 df.select(polars.len())
 """

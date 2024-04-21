@@ -7,25 +7,22 @@ from polars_upgrade._main import fix_plugins
 
 
 @pytest.mark.parametrize(
-    ('s', 'version'),
+    ("s", "version"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'df.pivot(index=index, aggregate_function="count")\n',
+            "import polars as pl\n" 'df.pivot(index=index, aggregate_function="count")\n',
             (0, 19, 19),
-            id='too old',
+            id="too old",
         ),
         pytest.param(
-            'import polars as pl\n'
-            'df.pivot(index=index, aggregate_function=count)\n',
+            "import polars as pl\n" "df.pivot(index=index, aggregate_function=count)\n",
             (0, 20, 5),
-            id='not constant',
+            id="not constant",
         ),
         pytest.param(
-            'import polars as pl\n'
-            'df.pivot(index=index)\n',
+            "import polars as pl\n" "df.pivot(index=index)\n",
             (0, 20, 5),
-            id='no aggregate function',
+            id="no aggregate function",
         ),
     ),
 )
@@ -34,13 +31,11 @@ def test_fix_capture_output_noop(s, version):
 
 
 @pytest.mark.parametrize(
-    ('s', 'expected'),
+    ("s", "expected"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'df.pivot(index=index, aggregate_function="count")\n',
-            'import polars as pl\n'
-            'df.pivot(index=index, aggregate_function="len")\n',
+            "import polars as pl\n" 'df.pivot(index=index, aggregate_function="count")\n',
+            "import polars as pl\n" 'df.pivot(index=index, aggregate_function="len")\n',
         ),
     ),
 )

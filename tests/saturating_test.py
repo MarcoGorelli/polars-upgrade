@@ -7,19 +7,15 @@ from polars_upgrade._main import fix_plugins
 
 
 @pytest.mark.parametrize(
-    ('s', 'expected'),
+    ("s", "expected"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("dt").dt.offset_by("1mo_saturating")\n',
-            'import polars as pl\n'
-            'pl.col("dt").dt.offset_by("1mo")\n',
+            "import polars as pl\n" 'pl.col("dt").dt.offset_by("1mo_saturating")\n',
+            "import polars as pl\n" 'pl.col("dt").dt.offset_by("1mo")\n',
         ),
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("dt").dt.offset_by(by="1mo_saturating")\n',
-            'import polars as pl\n'
-            'pl.col("dt").dt.offset_by(by="1mo")\n',
+            "import polars as pl\n" 'pl.col("dt").dt.offset_by(by="1mo_saturating")\n',
+            "import polars as pl\n" 'pl.col("dt").dt.offset_by(by="1mo")\n',
         ),
     ),
 )

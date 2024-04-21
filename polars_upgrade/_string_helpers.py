@@ -5,7 +5,7 @@ import re
 import string
 from typing import Optional
 
-NAMED_UNICODE_RE = re.compile(r'(?<!\\)(?:\\\\)*(\\N\{[^}]+\})')
+NAMED_UNICODE_RE = re.compile(r"(?<!\\)(?:\\\\)*(\\N\{[^}]+\})")
 
 DotFormatPart = tuple[str, Optional[str], Optional[str], Optional[str]]
 
@@ -42,21 +42,21 @@ def unparse_parsed_string(parsed: list[DotFormatPart]) -> str:
         ret, field_name, format_spec, conversion = tup
         ret = curly_escape(ret)
         if field_name is not None:
-            ret += '{' + field_name
+            ret += "{" + field_name
             if conversion:
-                ret += '!' + conversion
+                ret += "!" + conversion
             if format_spec:
-                ret += ':' + format_spec
-            ret += '}'
+                ret += ":" + format_spec
+            ret += "}"
         return ret
 
-    return ''.join(_convert_tup(tup) for tup in parsed)
+    return "".join(_convert_tup(tup) for tup in parsed)
 
 
 def curly_escape(s: str) -> str:
     parts = NAMED_UNICODE_RE.split(s)
-    return ''.join(
-        part.replace('{', '{{').replace('}', '}}')
+    return "".join(
+        part.replace("{", "{{").replace("}", "}}")
         if not NAMED_UNICODE_RE.fullmatch(part)
         else part
         for part in parts

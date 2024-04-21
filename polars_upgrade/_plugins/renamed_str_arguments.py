@@ -36,28 +36,25 @@ def rename(
 
 # function name -> (min_version, old, new)
 RENAMINGS = {
-    'zfill': ((0, 19, 12), 'alignment', 'length'),
-    'parse_int': ((0, 19, 14), 'radix', 'base'),
-    'ljust': ((0, 19, 12), 'width', 'length'),
-    'rjust': ((0, 19, 12), 'width', 'length'),
+    "zfill": ((0, 19, 12), "alignment", "length"),
+    "parse_int": ((0, 19, 14), "radix", "base"),
+    "ljust": ((0, 19, 12), "width", "length"),
+    "rjust": ((0, 19, 12), "width", "length"),
 }
 
 
 @register(ast.Attribute)
 def visit_Attribute(
-        state: State,
-        node: ast.Attribute,
-        parent: ast.AST,
+    state: State,
+    node: ast.Attribute,
+    parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            is_simple_expression(node.value, state.aliases['polars']) and
-            isinstance(parent, ast.Call) and
-            isinstance(parent.func, ast.Attribute) and
-            parent.func.attr in RENAMINGS and
-            (
-                isinstance(node.value, ast.Attribute) and
-                node.value.attr == 'str'
-            )
+        is_simple_expression(node.value, state.aliases["polars"])
+        and isinstance(parent, ast.Call)
+        and isinstance(parent.func, ast.Attribute)
+        and parent.func.attr in RENAMINGS
+        and (isinstance(node.value, ast.Attribute) and node.value.attr == "str")
     ):
         min_version, old, new = RENAMINGS[parent.func.attr]
         for keyword in parent.keywords:
@@ -67,7 +64,10 @@ def visit_Attribute(
             return
         if state.settings.target_version >= min_version:
             func = functools.partial(
-                rename, line=keyword.lineno,
-                utf8_byte_offset=keyword.col_offset, old=old, new=new,
+                rename,
+                line=keyword.lineno,
+                utf8_byte_offset=keyword.col_offset,
+                old=old,
+                new=new,
             )
             yield ast_to_offset(parent), func

@@ -35,20 +35,20 @@ def rename(
 
 # function name -> (min_version, old, new)
 RENAMINGS = {
-    'write_database': ((0, 20, 0), 'if_exists', 'if_table_exists'),
+    "write_database": ((0, 20, 0), "if_exists", "if_table_exists"),
 }
 
 
 @register(ast.Call)
 def visit_Call(
-        state: State,
-        node: ast.Call,
-        parent: ast.AST,
+    state: State,
+    node: ast.Call,
+    parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            isinstance(node.func, ast.Attribute) and
-            node.func.attr in RENAMINGS and
-            len(node.keywords) >= 1
+        isinstance(node.func, ast.Attribute)
+        and node.func.attr in RENAMINGS
+        and len(node.keywords) >= 1
     ):
         min_version, old, new = RENAMINGS[node.func.attr]
         if not state.settings.target_version >= min_version:
@@ -59,7 +59,10 @@ def visit_Call(
         else:
             return
         func = functools.partial(
-            rename, line=keyword.lineno,
-            utf8_byte_offset=keyword.col_offset, old=old, new=new,
+            rename,
+            line=keyword.lineno,
+            utf8_byte_offset=keyword.col_offset,
+            old=old,
+            new=new,
         )
         yield ast_to_offset(node), func

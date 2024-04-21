@@ -17,19 +17,20 @@ def myfunc(
     i: int,
     tokens: list[Token],
 ) -> None:
-    tokens[i] = tokens[i]._replace(src=tokens[i].src.replace('mo_saturating', 'mo'))
+    tokens[i] = tokens[i]._replace(src=tokens[i].src.replace("mo_saturating", "mo"))
 
 
 @register(ast.Constant)
 def visit_Constant(
-        state: State,
-        node: ast.Constant,
-        parent: ast.AST,
+    state: State,
+    node: ast.Constant,
+    parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            isinstance(node.value, str) and node.value.endswith('mo_saturating') and
-            isinstance(parent, (ast.Call, ast.keyword)) and
-            state.settings.target_version >= (0, 19, 3)
+        isinstance(node.value, str)
+        and node.value.endswith("mo_saturating")
+        and isinstance(parent, (ast.Call, ast.keyword))
+        and state.settings.target_version >= (0, 19, 3)
     ):
         func = functools.partial(myfunc)
         yield ast_to_offset(node), func

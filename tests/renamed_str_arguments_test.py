@@ -7,26 +7,22 @@ from polars_upgrade._main import fix_plugins
 
 
 @pytest.mark.parametrize(
-    ('s', 'version'),
+    ("s", "version"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("a").str.parse_int(3)\n',
+            "import polars as pl\n" 'pl.col("a").str.parse_int(3)\n',
             (0, 19, 19),
         ),
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("a").str.parse_int(radix=3)\n',
+            "import polars as pl\n" 'pl.col("a").str.parse_int(radix=3)\n',
             (0, 19, 0),
         ),
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("a").str.parse_int(n=3)\n',
+            "import polars as pl\n" 'pl.col("a").str.parse_int(n=3)\n',
             (0, 19, 19),
         ),
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("a").parse_int(radix=3)\n',
+            "import polars as pl\n" 'pl.col("a").parse_int(radix=3)\n',
             (0, 19, 19),
         ),
     ),
@@ -36,13 +32,11 @@ def test_fix_capture_output_noop(s, version):
 
 
 @pytest.mark.parametrize(
-    ('s', 'expected'),
+    ("s", "expected"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("a").str.parse_int(radix=4)\n',
-            'import polars as pl\n'
-            'pl.col("a").str.parse_int(base=4)\n',
+            "import polars as pl\n" 'pl.col("a").str.parse_int(radix=4)\n',
+            "import polars as pl\n" 'pl.col("a").str.parse_int(base=4)\n',
         ),
     ),
 )

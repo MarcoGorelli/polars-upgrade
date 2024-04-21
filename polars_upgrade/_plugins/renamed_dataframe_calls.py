@@ -20,34 +20,34 @@ def rename(
     name: str,
     new: str,
 ) -> None:
-    while not (tokens[i].name == 'NAME' and tokens[i].src == name):
+    while not (tokens[i].name == "NAME" and tokens[i].src == name):
         i += 1
     tokens[i] = tokens[i]._replace(src=new)
-    while not (tokens[i].name == 'OP' and tokens[i].src == '('):
+    while not (tokens[i].name == "OP" and tokens[i].src == "("):
         i += 1
-    tokens[i] = tokens[i]._replace(src='')
-    while not (tokens[i].name == 'OP' and tokens[i].src == ')'):
+    tokens[i] = tokens[i]._replace(src="")
+    while not (tokens[i].name == "OP" and tokens[i].src == ")"):
         i += 1
-    tokens[i] = tokens[i]._replace(src='')
+    tokens[i] = tokens[i]._replace(src="")
 
 
 RENAMINGS = {
-    'approx_n_unique': ((0, 20, 11), 'select(pl.all().approx_n_unique())'),
+    "approx_n_unique": ((0, 20, 11), "select(pl.all().approx_n_unique())"),
 }
 
 
 @register(ast.Call)
 def visit_Call(
-        state: State,
-        node: ast.Call,
-        parent: ast.AST,
+    state: State,
+    node: ast.Call,
+    parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            isinstance(node.func, ast.Attribute) and
-            node.func.attr in RENAMINGS and
-            'pl' in state.aliases['polars'] and
-            not node.args and
-            not node.keywords
+        isinstance(node.func, ast.Attribute)
+        and node.func.attr in RENAMINGS
+        and "pl" in state.aliases["polars"]
+        and not node.args
+        and not node.keywords
     ):
         min_version, new_name = RENAMINGS[node.func.attr]
         if state.settings.target_version >= min_version:

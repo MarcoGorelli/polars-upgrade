@@ -7,31 +7,23 @@ from polars_upgrade._main import fix_plugins
 
 
 @pytest.mark.parametrize(
-    ('s', 'expected'),
+    ("s", "expected"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("a").map_dict({2: 3})\n',
-            'import polars as pl\n'
-            'pl.col("a").replace({2: 3}, default=None)\n',
+            "import polars as pl\n" 'pl.col("a").map_dict({2: 3})\n',
+            "import polars as pl\n" 'pl.col("a").replace({2: 3}, default=None)\n',
         ),
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("a").map_dict({2: 3},)\n',
-            'import polars as pl\n'
-            'pl.col("a").replace({2: 3},default=None)\n',
+            "import polars as pl\n" 'pl.col("a").map_dict({2: 3},)\n',
+            "import polars as pl\n" 'pl.col("a").replace({2: 3},default=None)\n',
         ),
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("a").map_dict({2: 3}, default=3)\n',
-            'import polars as pl\n'
-            'pl.col("a").replace({2: 3}, default=3)\n',
+            "import polars as pl\n" 'pl.col("a").map_dict({2: 3}, default=3)\n',
+            "import polars as pl\n" 'pl.col("a").replace({2: 3}, default=3)\n',
         ),
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("a").map_dict({2: 3}, foo=3 )\n',
-            'import polars as pl\n'
-            'pl.col("a").replace({2: 3}, foo=3, default=None )\n',
+            "import polars as pl\n" 'pl.col("a").map_dict({2: 3}, foo=3 )\n',
+            "import polars as pl\n" 'pl.col("a").replace({2: 3}, foo=3, default=None )\n',
         ),
     ),
 )
