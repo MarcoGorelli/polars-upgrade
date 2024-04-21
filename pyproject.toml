@@ -28,19 +28,20 @@ line-length = 90
 fix = true
 target-version = "py38"
 
+[tool.ruff.lint]
 select = [
 #   "E", # pycodestyle
 #   "W", # pycodestyle
 #   "F", # Pyflakes
 #   "B", # flake8-bugbear
 #   "C4", # flake8-comprehensions
-# #   "D", # flake8-docstrings
+#   "D", # flake8-docstrings
 #   "SIM", # flake8-simplify
 #   "TCH", # flake8-type-checking
 #   "TID", # flake8-tidy-imports
 #   "Q", # flake8-quotes
 #   "UP", # pyupgrade
-# #   "PT", # flake8-pytest-style
+#   "PT", # flake8-pytest-style
 #   "RUF", # Ruff-specific rules
 #   "PTH", # flake8-use-pathlib
   "ALL",
@@ -71,7 +72,7 @@ ignore = [
   'TRY004'
 ]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 force-single-line = true
 
 [tool.pytest.ini_options]
