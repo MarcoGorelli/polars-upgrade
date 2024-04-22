@@ -7,9 +7,9 @@ from collections.abc import Sequence
 from typing import NamedTuple
 
 from tokenize_rt import NON_CODING_TOKENS
+from tokenize_rt import UNIMPORTANT_WS
 from tokenize_rt import Token
 from tokenize_rt import tokens_to_src
-from tokenize_rt import UNIMPORTANT_WS
 
 _OPENING = frozenset("([{")
 _CLOSING = frozenset(")]}")
@@ -374,8 +374,7 @@ def _arg_contains_newline(tokens: list[Token], start: int, end: int) -> bool:
     for i in range(start, end):
         if tokens[i].name in {"NL", "NEWLINE"}:
             return True
-    else:
-        return False
+    return False
 
 
 def replace_call(

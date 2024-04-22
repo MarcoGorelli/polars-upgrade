@@ -7,9 +7,9 @@ from collections.abc import Iterable
 from tokenize_rt import Offset
 
 from polars_upgrade._ast_helpers import ast_to_offset
-from polars_upgrade._data import register
 from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
+from polars_upgrade._data import register
 from polars_upgrade._token_helpers import replace_name
 
 RENAMINGS = {

@@ -10,13 +10,13 @@ from collections.abc import Sequence
 from re import Match
 
 from tokenize_rt import NON_CODING_TOKENS
+from tokenize_rt import UNIMPORTANT_WS
+from tokenize_rt import Token
 from tokenize_rt import parse_string_literal
 from tokenize_rt import reversed_enumerate
 from tokenize_rt import rfind_string_parts
 from tokenize_rt import src_to_tokens
-from tokenize_rt import Token
 from tokenize_rt import tokens_to_src
-from tokenize_rt import UNIMPORTANT_WS
 
 from polars_upgrade import __version__ as version
 from polars_upgrade._ast_helpers import ast_parse
