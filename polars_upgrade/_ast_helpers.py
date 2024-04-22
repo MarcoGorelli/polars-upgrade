@@ -46,8 +46,7 @@ def contains_await(node: ast.AST) -> bool:
     for node_ in ast.walk(node):
         if isinstance(node_, ast.Await):
             return True
-    else:
-        return False
+    return False
 
 
 def is_async_listcomp(node: ast.ListComp) -> bool:

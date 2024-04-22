@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from polars_upgrade import rewrite
 from polars_upgrade import Settings
+from polars_upgrade import rewrite
 
 
 def test_library() -> None:

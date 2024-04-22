@@ -8,9 +8,9 @@ from tokenize_rt import Offset
 from tokenize_rt import Token
 
 from polars_upgrade._ast_helpers import ast_to_offset
-from polars_upgrade._data import register
 from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
+from polars_upgrade._data import register
 
 
 def rename(
@@ -29,7 +29,7 @@ def rename(
             break
         i += 1
     else:
-        raise AssertionError()
+        raise AssertionError
     tokens[idx] = tokens[idx]._replace(src=tokens[idx].src.replace(old, new))
 
 
