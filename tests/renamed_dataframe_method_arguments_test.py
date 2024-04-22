@@ -7,19 +7,17 @@ from polars_upgrade._main import fix_plugins
 
 
 @pytest.mark.parametrize(
-    ('s', 'version'),
+    ("s", "version"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'df.write_database(foo, if_exists="append")\n',
+            "import polars as pl\n" 'df.write_database(foo, if_exists="append")\n',
             (0, 19, 19),
-            id='too old',
+            id="too old",
         ),
         pytest.param(
-            'import polars as pl\n'
-            'df.write_database(foo, if_table_exists="append")\n',
+            "import polars as pl\n" 'df.write_database(foo, if_table_exists="append")\n',
             (0, 20, 11),
-            id='already rewritten',
+            id="already rewritten",
         ),
     ),
 )
@@ -28,13 +26,11 @@ def test_fix_capture_output_noop(s, version):
 
 
 @pytest.mark.parametrize(
-    ('s', 'expected'),
+    ("s", "expected"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'df.write_database(foo, if_exists="append")\n',
-            'import polars as pl\n'
-            'df.write_database(foo, if_table_exists="append")\n',
+            "import polars as pl\n" 'df.write_database(foo, if_exists="append")\n',
+            "import polars as pl\n" 'df.write_database(foo, if_table_exists="append")\n',
         ),
     ),
 )

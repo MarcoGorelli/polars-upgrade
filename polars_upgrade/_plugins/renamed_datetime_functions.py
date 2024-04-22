@@ -21,30 +21,38 @@ def rename(
     name: str,
     new_name: str,
 ) -> None:
-    while not (tokens[i].name == 'NAME' and tokens[i].src == name):
+    while not (tokens[i].name == "NAME" and tokens[i].src == name):
         i += 1
     tokens[i] = tokens[i]._replace(src=new_name)
 
 
 @register(ast.Attribute)
 def visit_Attribute(
-        state: State,
-        node: ast.Attribute,
-        parent: ast.AST,
+    state: State,
+    node: ast.Attribute,
+    parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            state.settings.target_version >= (0, 19, 13) and
-            isinstance(node.value, ast.Attribute) and
-            is_simple_expression(node.value.value, state.aliases['polars']) and
-            node.value.attr == 'dt' and
-            node.attr in (
-                'nanoseconds', 'microseconds', 'milliseconds',
-                'seconds', 'minutes', 'hours', 'days', 'weeks',
-            )
+        state.settings.target_version >= (0, 19, 13)
+        and isinstance(node.value, ast.Attribute)
+        and is_simple_expression(node.value.value, state.aliases["polars"])
+        and node.value.attr == "dt"
+        and node.attr
+        in (
+            "nanoseconds",
+            "microseconds",
+            "milliseconds",
+            "seconds",
+            "minutes",
+            "hours",
+            "days",
+            "weeks",
+        )
     ):
-        new_attr = f'total_{node.attr}'
+        new_attr = f"total_{node.attr}"
         func = functools.partial(
-            rename, name=node.attr,
+            rename,
+            name=node.attr,
             new_name=new_attr,
         )
         yield ast_to_offset(node), func

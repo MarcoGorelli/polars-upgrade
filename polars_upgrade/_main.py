@@ -32,11 +32,11 @@ from polars_upgrade._token_helpers import is_open
 from polars_upgrade._token_helpers import remove_brace
 
 EXCLUDES = (
-    r'/('
-    r'\.direnv|\.eggs|\.git|\.hg|\.ipynb_checkpoints|\.mypy_cache|\.nox|\.svn|'
-    r'\.tox|\.venv|'
-    r'_build|buck-out|build|dist|venv'
-    r')/'
+    r"/("
+    r"\.direnv|\.eggs|\.git|\.hg|\.ipynb_checkpoints|\.mypy_cache|\.nox|\.svn|"
+    r"\.tox|\.venv|"
+    r"_build|buck-out|build|dist|venv"
+    r")/"
 )
 
 
@@ -59,11 +59,13 @@ def _fixup_dedent_tokens(tokens: list[Token]) -> None:
     |+----UNIMPORTANT_WS
     """
     for i, token in enumerate(tokens):
-        if token.name == UNIMPORTANT_WS and tokens[i + 1].name == 'DEDENT':
+        if token.name == UNIMPORTANT_WS and tokens[i + 1].name == "DEDENT":
             tokens[i], tokens[i + 1] = tokens[i + 1], tokens[i]
 
 
-def fix_plugins(contents_text: str, settings: Settings, *, aliases: set[str] | None = None) -> str:
+def fix_plugins(
+    contents_text: str, settings: Settings, *, aliases: set[str] | None = None
+) -> str:
     try:
         ast_obj = ast_parse(contents_text)
     except SyntaxError:
@@ -93,33 +95,53 @@ def fix_plugins(contents_text: str, settings: Settings, *, aliases: set[str] | N
 
 
 # https://docs.python.org/3/reference/lexical_analysis.html
-ESCAPE_STARTS = frozenset((
-    '\n', '\r', '\\', "'", '"', 'a', 'b', 'f', 'n', 'r', 't', 'v',
-    '0', '1', '2', '3', '4', '5', '6', '7',  # octal escapes
-    'x',  # hex escapes
-))
-ESCAPE_RE = re.compile(r'\\.', re.DOTALL)
-NAMED_ESCAPE_NAME = re.compile(r'\{[^}]+\}')
+ESCAPE_STARTS = frozenset(
+    (
+        "\n",
+        "\r",
+        "\\",
+        "'",
+        '"',
+        "a",
+        "b",
+        "f",
+        "n",
+        "r",
+        "t",
+        "v",
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",  # octal escapes
+        "x",  # hex escapes
+    )
+)
+ESCAPE_RE = re.compile(r"\\.", re.DOTALL)
+NAMED_ESCAPE_NAME = re.compile(r"\{[^}]+\}")
 
 
 def _fix_escape_sequences(token: Token) -> Token:
     prefix, rest = parse_string_literal(token.src)
     actual_prefix = prefix.lower()
 
-    if 'r' in actual_prefix or '\\' not in rest:
+    if "r" in actual_prefix or "\\" not in rest:
         return token
 
-    is_bytestring = 'b' in actual_prefix
+    is_bytestring = "b" in actual_prefix
 
     def _is_valid_escape(match: Match[str]) -> bool:
         c = match.group()[1]
         return (
-            c in ESCAPE_STARTS or
-            (not is_bytestring and c in 'uU') or
-            (
-                not is_bytestring and
-                c == 'N' and
-                bool(NAMED_ESCAPE_NAME.match(rest, match.end()))
+            c in ESCAPE_STARTS
+            or (not is_bytestring and c in "uU")
+            or (
+                not is_bytestring
+                and c == "N"
+                and bool(NAMED_ESCAPE_NAME.match(rest, match.end()))
             )
         )
 
@@ -136,22 +158,22 @@ def _fix_escape_sequences(token: Token) -> Token:
         if _is_valid_escape(match):
             return matched
         else:
-            return fr'\{matched}'
+            return rf"\{matched}"
 
-    if has_invalid_escapes and (has_valid_escapes or 'u' in actual_prefix):
+    if has_invalid_escapes and (has_valid_escapes or "u" in actual_prefix):
         return token._replace(src=prefix + ESCAPE_RE.sub(cb, rest))
     elif has_invalid_escapes and not has_valid_escapes:
-        return token._replace(src=prefix + 'r' + rest)
+        return token._replace(src=prefix + "r" + rest)
     else:
         return token
 
 
 def _remove_u_prefix(token: Token) -> Token:
     prefix, rest = parse_string_literal(token.src)
-    if 'u' not in prefix.lower():
+    if "u" not in prefix.lower():
         return token
     else:
-        new_prefix = prefix.replace('u', '').replace('U', '')
+        new_prefix = prefix.replace("u", "").replace("U", "")
         return token._replace(src=new_prefix + rest)
 
 
@@ -161,7 +183,7 @@ def _fix_extraneous_parens(tokens: list[Token], i: int) -> None:
     while tokens[i].name in NON_CODING_TOKENS:
         i += 1
     # if we did not find another brace, return immediately
-    if tokens[i].src != '(':
+    if tokens[i].src != "(":
         return
 
     start = i
@@ -169,7 +191,7 @@ def _fix_extraneous_parens(tokens: list[Token], i: int) -> None:
     while depth:
         i += 1
         # found comma or yield at depth 1: this is a tuple / coroutine
-        if depth == 1 and tokens[i].src in {',', 'yield'}:
+        if depth == 1 and tokens[i].src in {",", "yield"}:
             return
         elif is_open(tokens[i]):
             depth += 1
@@ -178,7 +200,7 @@ def _fix_extraneous_parens(tokens: list[Token], i: int) -> None:
     end = i
 
     # empty tuple
-    if all(t.name in NON_CODING_TOKENS for t in tokens[start + 1:i]):
+    if all(t.name in NON_CODING_TOKENS for t in tokens[start + 1 : i]):
         return
 
     # search forward for the next non-coding token
@@ -186,7 +208,7 @@ def _fix_extraneous_parens(tokens: list[Token], i: int) -> None:
     while tokens[i].name in NON_CODING_TOKENS:
         i += 1
 
-    if tokens[i].src == ')':
+    if tokens[i].src == ")":
         remove_brace(tokens, end)
         remove_brace(tokens, start)
 
@@ -195,7 +217,7 @@ def _remove_fmt(tup: DotFormatPart) -> DotFormatPart:
     if tup[1] is None:
         return tup
     else:
-        return (tup[0], '', tup[2], tup[3])
+        return (tup[0], "", tup[2], tup[3])
 
 
 def _fix_format_literal(tokens: list[Token], end: int) -> None:
@@ -205,7 +227,7 @@ def _fix_format_literal(tokens: list[Token], end: int) -> None:
     for i in parts:
         # f'foo {0}'.format(...) would get turned into a SyntaxError
         prefix, _ = parse_string_literal(tokens[i].src)
-        if 'f' in prefix.lower():  # pragma: <3.12 cover
+        if "f" in prefix.lower():  # pragma: <3.12 cover
             return
 
         try:
@@ -218,9 +240,11 @@ def _fix_format_literal(tokens: list[Token], end: int) -> None:
         # format, slice avoids the `None` format key
         for _, fmtkey, spec, _ in parsed[:-1]:
             if (
-                    fmtkey is not None and inty(fmtkey) and
-                    int(fmtkey) == last_int + 1 and
-                    spec is not None and '{' not in spec
+                fmtkey is not None
+                and inty(fmtkey)
+                and int(fmtkey) == last_int + 1
+                and spec is not None
+                and "{" not in spec
             ):
                 last_int += 1
             else:
@@ -238,28 +262,24 @@ def _fix_encode_to_binary(tokens: list[Token], i: int) -> None:
         return
 
     # .encode()
-    if (
-            i + 2 < len(tokens) and
-            tokens[i + 1].src == '(' and
-            tokens[i + 2].src == ')'
-    ):
+    if i + 2 < len(tokens) and tokens[i + 1].src == "(" and tokens[i + 2].src == ")":
         victims = slice(i - 1, i + 3)
         latin1_ok = False
     # .encode('encoding')
     elif (
-            i + 3 < len(tokens) and
-            tokens[i + 1].src == '(' and
-            tokens[i + 2].name == 'STRING' and
-            tokens[i + 3].src == ')'
+        i + 3 < len(tokens)
+        and tokens[i + 1].src == "("
+        and tokens[i + 2].name == "STRING"
+        and tokens[i + 3].src == ")"
     ):
         victims = slice(i - 1, i + 4)
         prefix, rest = parse_string_literal(tokens[i + 2].src)
-        if 'f' in prefix.lower():  # pragma: <3.12 cover
+        if "f" in prefix.lower():  # pragma: <3.12 cover
             return
         encoding = ast.literal_eval(prefix + rest)
-        if is_codec(encoding, 'ascii') or is_codec(encoding, 'utf-8'):
+        if is_codec(encoding, "ascii") or is_codec(encoding, "utf-8"):
             latin1_ok = False
-        elif is_codec(encoding, 'iso8859-1'):
+        elif is_codec(encoding, "iso8859-1"):
             latin1_ok = True
         else:
             return
@@ -270,18 +290,18 @@ def _fix_encode_to_binary(tokens: list[Token], i: int) -> None:
         prefix, rest = parse_string_literal(tokens[part].src)
         escapes = set(ESCAPE_RE.findall(rest))
         if (
-                not rest.isascii() or
-                '\\u' in escapes or
-                '\\U' in escapes or
-                '\\N' in escapes or
-                ('\\x' in escapes and not latin1_ok) or
-                'f' in prefix.lower()
+            not rest.isascii()
+            or "\\u" in escapes
+            or "\\U" in escapes
+            or "\\N" in escapes
+            or ("\\x" in escapes and not latin1_ok)
+            or "f" in prefix.lower()
         ):
             return
 
     for part in parts:
         prefix, rest = parse_string_literal(tokens[part].src)
-        prefix = 'b' + prefix.replace('u', '').replace('U', '')
+        prefix = "b" + prefix.replace("u", "").replace("U", "")
         tokens[part] = tokens[part]._replace(src=prefix + rest)
     del tokens[victims]
 
@@ -292,37 +312,37 @@ def _fix_tokens(contents_text: str) -> str:
     except tokenize.TokenError:
         return contents_text
     for i, token in reversed_enumerate(tokens):
-        if token.name == 'STRING':
+        if token.name == "STRING":
             tokens[i] = _fix_escape_sequences(_remove_u_prefix(tokens[i]))
-        elif token.matches(name='OP', src='('):
+        elif token.matches(name="OP", src="("):
             _fix_extraneous_parens(tokens, i)
-        elif token.src == 'format' and i > 0 and tokens[i - 1].src == '.':
+        elif token.src == "format" and i > 0 and tokens[i - 1].src == ".":
             _fix_format_literal(tokens, i - 2)
-        elif token.src == 'encode' and i > 0 and tokens[i - 1].src == '.':
+        elif token.src == "encode" and i > 0 and tokens[i - 1].src == ".":
             _fix_encode_to_binary(tokens, i)
         elif (
-                token.utf8_byte_offset == 0 and
-                token.line < 3 and
-                token.name == 'COMMENT' and
-                tokenize.cookie_re.match(token.src)
+            token.utf8_byte_offset == 0
+            and token.line < 3
+            and token.name == "COMMENT"
+            and tokenize.cookie_re.match(token.src)
         ):
             del tokens[i]
-            assert tokens[i].name == 'NL', tokens[i].name
+            assert tokens[i].name == "NL", tokens[i].name
             del tokens[i]
     return tokens_to_src(tokens).lstrip()
 
 
 def _fix_file(filename: str, args: argparse.Namespace) -> int:
-    if filename == '-':
+    if filename == "-":
         contents_bytes = sys.stdin.buffer.read()
     else:
-        with open(filename, 'rb') as fb:
+        with open(filename, "rb") as fb:
             contents_bytes = fb.read()
 
     try:
         contents_text_orig = contents_text = contents_bytes.decode()
     except UnicodeDecodeError:
-        print(f'{filename} is non-utf-8 (not supported)')
+        print(f"{filename} is non-utf-8 (not supported)")
         return 1
 
     contents_text = fix_plugins(
@@ -333,11 +353,11 @@ def _fix_file(filename: str, args: argparse.Namespace) -> int:
     )
     # contents_text = _fix_tokens(contents_text)
 
-    if filename == '-':
-        print(contents_text, end='')
+    if filename == "-":
+        print(contents_text, end="")
     elif contents_text != contents_text_orig:
-        print(f'Rewriting {filename}', file=sys.stderr)
-        with open(filename, 'w', encoding='UTF-8', newline='') as f:
+        print(f"Rewriting {filename}", file=sys.stderr)
+        with open(filename, "w", encoding="UTF-8", newline="") as f:
             f.write(contents_text)
 
     return contents_text != contents_text_orig
@@ -348,14 +368,15 @@ Version = tuple[int, ...]
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument('filenames', nargs='*')
-    parser.add_argument('--target-version', required=True, type=str)
+    parser.add_argument("filenames", nargs="*")
+    parser.add_argument("--target-version", required=True, type=str)
     parser.add_argument(
-        '--version', action='version',
-        version=f'%(prog)s {version}',
+        "--version",
+        action="version",
+        version=f"%(prog)s {version}",
     )
     args = parser.parse_args(argv)
-    target_version = tuple(int(v) for v in args.target_version.split('.'))
+    target_version = tuple(int(v) for v in args.target_version.split("."))
     args.target_version = target_version
     paths = [pathlib.Path(path).resolve() for path in args.filenames]
     ret = 0
@@ -364,9 +385,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             filepaths = iter((path,))
         else:
             filepaths = (
-                p for p in path.rglob('*')
-                if not re.search(EXCLUDES, str(p.as_posix())) and
-                p.suffix == '.py'
+                p
+                for p in path.rglob("*")
+                if not re.search(EXCLUDES, str(p.as_posix())) and p.suffix == ".py"
             )
 
         for filepath in filepaths:
@@ -375,5 +396,5 @@ def main(argv: Sequence[str] | None = None) -> int:
     return ret
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     raise SystemExit(main())

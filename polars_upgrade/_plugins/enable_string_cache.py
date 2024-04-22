@@ -19,42 +19,39 @@ def rewrite_to_enable(
     i: int,
     tokens: list[Token],
 ) -> None:
-    j = find_op(tokens, i, '(')
+    j = find_op(tokens, i, "(")
     func_args, _ = parse_call_args(tokens, j)
     i = func_args[0][0]
-    tokens[i] = tokens[i]._replace(src='')
+    tokens[i] = tokens[i]._replace(src="")
 
 
 def rewrite_to_disable(
     i: int,
     tokens: list[Token],
 ) -> None:
-    j = find_op(tokens, i, '(')
+    j = find_op(tokens, i, "(")
     func_args, _ = parse_call_args(tokens, j)
-    while not (
-        tokens[i].name == 'NAME' and
-        tokens[i].src == 'enable_string_cache'
-    ):
+    while not (tokens[i].name == "NAME" and tokens[i].src == "enable_string_cache"):
         i += 1
-    tokens[i] = tokens[i]._replace(src='disable_string_cache')
+    tokens[i] = tokens[i]._replace(src="disable_string_cache")
     i = func_args[0][0]
-    tokens[i] = tokens[i]._replace(src='')
+    tokens[i] = tokens[i]._replace(src="")
 
 
 @register(ast.Call)
 def visit_Call(
-        state: State,
-        node: ast.Call,
-        parent: ast.AST,
+    state: State,
+    node: ast.Call,
+    parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            state.settings.target_version >= (0, 19, 3) and
-            isinstance(node.func, ast.Attribute) and
-            isinstance(node.func.value, ast.Name) and
-            node.func.attr == 'enable_string_cache' and
-            node.func.value.id in state.aliases['polars'] and
-            len(node.args) == 1 and
-            isinstance(node.args[0], ast.Constant)
+        state.settings.target_version >= (0, 19, 3)
+        and isinstance(node.func, ast.Attribute)
+        and isinstance(node.func.value, ast.Name)
+        and node.func.attr == "enable_string_cache"
+        and node.func.value.id in state.aliases["polars"]
+        and len(node.args) == 1
+        and isinstance(node.args[0], ast.Constant)
     ):
         if node.args[0].value is True:
             func = functools.partial(

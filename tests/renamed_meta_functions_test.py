@@ -7,13 +7,12 @@ from polars_upgrade._main import fix_plugins
 
 
 @pytest.mark.parametrize(
-    ('s', 'version'),
+    ("s", "version"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("a").meta.write_json\n',
+            "import polars as pl\n" 'pl.col("a").meta.write_json\n',
             (0, 20, 10),
-            id='too old',
+            id="too old",
         ),
     ),
 )
@@ -22,13 +21,11 @@ def test_fix_capture_output_noop(s, version):
 
 
 @pytest.mark.parametrize(
-    ('s', 'expected'),
+    ("s", "expected"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("a").meta.write_json(file)\n',
-            'import polars as pl\n'
-            'pl.col("a").meta.serialize(file)\n',
+            "import polars as pl\n" 'pl.col("a").meta.write_json(file)\n',
+            "import polars as pl\n" 'pl.col("a").meta.serialize(file)\n',
         ),
     ),
 )

@@ -7,19 +7,17 @@ from polars_upgrade._main import fix_plugins
 
 
 @pytest.mark.parametrize(
-    ('s', 'version'),
+    ("s", "version"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'df.approx_n_unique()\n',
+            "import polars as pl\n" "df.approx_n_unique()\n",
             (0, 19, 19),
-            id='too old',
+            id="too old",
         ),
         pytest.param(
-            'import polars as pl\n'
-            'pl.approx_n_unique("foo")\n',
+            "import polars as pl\n" 'pl.approx_n_unique("foo")\n',
             (0, 20, 20),
-            id='has argument',
+            id="has argument",
         ),
     ),
 )
@@ -28,13 +26,11 @@ def test_fix_capture_output_noop(s, version):
 
 
 @pytest.mark.parametrize(
-    ('s', 'expected'),
+    ("s", "expected"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'df.approx_n_unique()\n',
-            'import polars as pl\n'
-            'df.select(pl.all().approx_n_unique())\n',
+            "import polars as pl\n" "df.approx_n_unique()\n",
+            "import polars as pl\n" "df.select(pl.all().approx_n_unique())\n",
         ),
     ),
 )

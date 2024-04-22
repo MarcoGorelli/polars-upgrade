@@ -21,35 +21,36 @@ def rename(
     name: str,
     new: str,
 ) -> None:
-    while not (tokens[i].name == 'NAME' and tokens[i].src == name):
+    while not (tokens[i].name == "NAME" and tokens[i].src == name):
         i += 1
     tokens[i] = tokens[i]._replace(src=new)
 
 
 RENAMINGS = {
-    'count_match': ((0, 19, 3), 'count_matches'),
-    'lengths': ((0, 19, 8), 'len'),
-    'take': ((0, 19, 14), 'gather'),
+    "count_match": ((0, 19, 3), "count_matches"),
+    "lengths": ((0, 19, 8), "len"),
+    "take": ((0, 19, 14), "gather"),
 }
 
 
 @register(ast.Attribute)
 def visit_Attribute(
-        state: State,
-        node: ast.Attribute,
-        parent: ast.AST,
+    state: State,
+    node: ast.Attribute,
+    parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            isinstance(node.value, ast.Attribute) and
-            is_simple_expression(node.value.value, state.aliases['polars']) and
-            node.value.attr == 'list' and
-            node.attr in RENAMINGS
+        isinstance(node.value, ast.Attribute)
+        and is_simple_expression(node.value.value, state.aliases["polars"])
+        and node.value.attr == "list"
+        and node.attr in RENAMINGS
     ):
         min_version, new_name = RENAMINGS[node.attr]
         if state.settings.target_version >= min_version:
             new_attr = new_name
             func = functools.partial(
-                rename, name=node.attr,
+                rename,
+                name=node.attr,
                 new=new_attr,
             )
             yield ast_to_offset(node), func

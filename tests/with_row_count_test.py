@@ -7,13 +7,12 @@ from polars_upgrade._main import fix_plugins
 
 
 @pytest.mark.parametrize(
-    ('s', 'version'),
+    ("s", "version"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'df.with_row_count()\n',
+            "import polars as pl\n" "df.with_row_count()\n",
             (0, 19, 19),
-            id='too old',
+            id="too old",
         ),
     ),
 )
@@ -22,10 +21,10 @@ def test_fix_capture_output_noop(s, version):
 
 
 @pytest.mark.parametrize(
-    ('s', 'expected'),
+    ("s", "expected"),
     (
         pytest.param(
-            'df.with_row_count()\n',
+            "df.with_row_count()\n",
             'df.with_row_index("row_nr", )\n',
         ),
         pytest.param(

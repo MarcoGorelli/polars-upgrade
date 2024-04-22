@@ -23,7 +23,7 @@ def _use_label(
     truncate_value: object,
     truncate_idx: int,
 ) -> None:
-    j = find_op(tokens, i, '(')
+    j = find_op(tokens, i, "(")
     func_args, _ = parse_call_args(tokens, j)
     if truncate_value is True:
         new = 'label="left"'
@@ -41,22 +41,21 @@ def _use_label(
 
 @register(ast.Call)
 def visit_Call(
-        state: State,
-        node: ast.Call,
-        parent: ast.AST,
+    state: State,
+    node: ast.Call,
+    parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            isinstance(node.func, ast.Attribute) and
-            node.func.attr == 'group_by_dynamic' and
-            len(node.keywords) >= 1 and
-            state.settings.target_version >= (0, 19, 4)
+        isinstance(node.func, ast.Attribute)
+        and node.func.attr == "group_by_dynamic"
+        and len(node.keywords) >= 1
+        and state.settings.target_version >= (0, 19, 4)
     ):
         truncate_idx = None
         truncate_value = None
         for n, keyword_argument in enumerate(node.keywords):
-            if (
-                keyword_argument.arg == 'truncate' and
-                isinstance(keyword_argument.value, ast.Constant)
+            if keyword_argument.arg == "truncate" and isinstance(
+                keyword_argument.value, ast.Constant
             ):
                 truncate_idx = n
                 truncate_value = keyword_argument.value.value

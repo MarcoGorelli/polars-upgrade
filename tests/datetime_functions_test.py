@@ -7,13 +7,11 @@ from polars_upgrade._main import fix_plugins
 
 
 @pytest.mark.parametrize(
-    ('s', 'expected'),
+    ("s", "expected"),
     (
         pytest.param(
-            'import polars as pl\n'
-            'pl.col("a").dt.nanoseconds()\n',
-            'import polars as pl\n'
-            'pl.col("a").dt.total_nanoseconds()\n',
+            "import polars as pl\n" 'pl.col("a").dt.nanoseconds()\n',
+            "import polars as pl\n" 'pl.col("a").dt.total_nanoseconds()\n',
         ),
         # pytest.param(
         #     'import polars as pl\n'

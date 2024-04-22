@@ -35,64 +35,64 @@ def rename(
 
 # function name -> (min_version, old, new)
 RENAMINGS = {
-    'scan_ndjson': [
-        ((0, 20, 4), 'row_count_name', 'row_index_name'),
-        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    "scan_ndjson": [
+        ((0, 20, 4), "row_count_name", "row_index_name"),
+        ((0, 20, 4), "row_count_offset", "row_index_offset"),
     ],
-    'read_csv': [
-        ((0, 19, 14), 'comment_char', 'comment_prefix'),
-        ((0, 20, 4), 'row_count_name', 'row_index_name'),
-        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    "read_csv": [
+        ((0, 19, 14), "comment_char", "comment_prefix"),
+        ((0, 20, 4), "row_count_name", "row_index_name"),
+        ((0, 20, 4), "row_count_offset", "row_index_offset"),
     ],
-    'read_csv_batched': [
-        ((0, 19, 14), 'comment_char', 'comment_prefix'),
-        ((0, 20, 4), 'row_count_name', 'row_index_name'),
-        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    "read_csv_batched": [
+        ((0, 19, 14), "comment_char", "comment_prefix"),
+        ((0, 20, 4), "row_count_name", "row_index_name"),
+        ((0, 20, 4), "row_count_offset", "row_index_offset"),
     ],
-    'scan_csv': [
-        ((0, 19, 14), 'comment_char', 'comment_prefix'),
-        ((0, 20, 4), 'row_count_name', 'row_index_name'),
-        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    "scan_csv": [
+        ((0, 19, 14), "comment_char", "comment_prefix"),
+        ((0, 20, 4), "row_count_name", "row_index_name"),
+        ((0, 20, 4), "row_count_offset", "row_index_offset"),
     ],
-    'read_ipc': [
-        ((0, 20, 4), 'row_count_name', 'row_index_name'),
-        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    "read_ipc": [
+        ((0, 20, 4), "row_count_name", "row_index_name"),
+        ((0, 20, 4), "row_count_offset", "row_index_offset"),
     ],
-    'read_ipc_stream': [
-        ((0, 20, 4), 'row_count_name', 'row_index_name'),
-        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    "read_ipc_stream": [
+        ((0, 20, 4), "row_count_name", "row_index_name"),
+        ((0, 20, 4), "row_count_offset", "row_index_offset"),
     ],
-    'scan_ipc': [
-        ((0, 20, 4), 'row_count_name', 'row_index_name'),
-        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    "scan_ipc": [
+        ((0, 20, 4), "row_count_name", "row_index_name"),
+        ((0, 20, 4), "row_count_offset", "row_index_offset"),
     ],
-    'read_parquet': [
-        ((0, 20, 4), 'row_count_name', 'row_index_name'),
-        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    "read_parquet": [
+        ((0, 20, 4), "row_count_name", "row_index_name"),
+        ((0, 20, 4), "row_count_offset", "row_index_offset"),
     ],
-    'scan_parquet': [
-        ((0, 20, 4), 'row_count_name', 'row_index_name'),
-        ((0, 20, 4), 'row_count_offset', 'row_index_offset'),
+    "scan_parquet": [
+        ((0, 20, 4), "row_count_name", "row_index_name"),
+        ((0, 20, 4), "row_count_offset", "row_index_offset"),
     ],
-    'read_excel': [
-        ((0, 20, 6), 'xlsx2csv_options', 'engine_options'),
-        ((0, 20, 7), 'read_csv_options', 'read_options'),
+    "read_excel": [
+        ((0, 20, 6), "xlsx2csv_options", "engine_options"),
+        ((0, 20, 7), "read_csv_options", "read_options"),
     ],
 }
 
 
 @register(ast.Call)
 def visit_Call(
-        state: State,
-        node: ast.Call,
-        parent: ast.AST,
+    state: State,
+    node: ast.Call,
+    parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-            isinstance(node.func, ast.Attribute) and
-            node.func.attr in RENAMINGS and
-            isinstance(node.func.value, ast.Name) and
-            node.func.value.id in state.aliases['polars'] and
-            len(node.keywords) >= 1
+        isinstance(node.func, ast.Attribute)
+        and node.func.attr in RENAMINGS
+        and isinstance(node.func.value, ast.Name)
+        and node.func.value.id in state.aliases["polars"]
+        and len(node.keywords) >= 1
     ):
         for min_version, old, new in RENAMINGS[node.func.attr]:
             if not state.settings.target_version >= min_version:
@@ -103,7 +103,10 @@ def visit_Call(
             else:
                 continue
             func = functools.partial(
-                rename, line=keyword.lineno,
-                utf8_byte_offset=keyword.col_offset, old=old, new=new,
+                rename,
+                line=keyword.lineno,
+                utf8_byte_offset=keyword.col_offset,
+                old=old,
+                new=new,
             )
             yield ast_to_offset(node), func

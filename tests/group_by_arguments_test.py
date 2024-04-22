@@ -7,10 +7,10 @@ from polars_upgrade._main import fix_plugins
 
 
 @pytest.mark.parametrize(
-    ('s', 'version'),
+    ("s", "version"),
     (
         pytest.param(
-            'df.group_by_dynamic(truncate=1)\n',
+            "df.group_by_dynamic(truncate=1)\n",
             (0, 20, 0),
         ),
         pytest.param(
@@ -24,21 +24,19 @@ def test_fix_capture_output_noop(s, version):
 
 
 @pytest.mark.parametrize(
-    ('s', 'expected'),
+    ("s", "expected"),
     (
         pytest.param(
-            'df.group_by_dynamic(truncate=True)\n',
+            "df.group_by_dynamic(truncate=True)\n",
             'df.group_by_dynamic(label="left")\n',
         ),
         pytest.param(
-            'df.group_by_dynamic(truncate=False)\n',
+            "df.group_by_dynamic(truncate=False)\n",
             'df.group_by_dynamic(label="datapoint")\n',
         ),
         pytest.param(
-            'df.group_by_dynamic("ts", every="3d", '
-            'truncate=False, period="1d")\n',
-            'df.group_by_dynamic("ts", every="3d", '
-            'label="datapoint", period="1d")\n',
+            'df.group_by_dynamic("ts", every="3d", ' 'truncate=False, period="1d")\n',
+            'df.group_by_dynamic("ts", every="3d", ' 'label="datapoint", period="1d")\n',
         ),
     ),
 )

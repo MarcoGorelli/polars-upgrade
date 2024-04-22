@@ -35,20 +35,17 @@ def rename(
 
 # function name -> (min_version, argument, old, new)
 RENAMINGS = {
-    'pivot': ((0, 20, 5), 'aggregate_function', 'count', 'len'),
+    "pivot": ((0, 20, 5), "aggregate_function", "count", "len"),
 }
 
 
 @register(ast.Call)
 def visit_Call(
-        state: State,
-        node: ast.Call,
-        parent: ast.AST,
+    state: State,
+    node: ast.Call,
+    parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
-    if (
-            isinstance(node.func, ast.Attribute) and
-            node.func.attr in RENAMINGS
-    ):
+    if isinstance(node.func, ast.Attribute) and node.func.attr in RENAMINGS:
         min_version, argument, old, new = RENAMINGS[node.func.attr]
         if argument not in {kw.arg for kw in node.keywords}:
             return
@@ -58,13 +55,16 @@ def visit_Call(
             if keyword.arg == argument:
                 break
         else:
-            raise AssertionError('unreachable code, please report bug')
+            raise AssertionError("unreachable code, please report bug")
         if not isinstance(keyword.value, ast.Constant):
             return
         if keyword.value.value != old:
             return
         func = functools.partial(
-            rename, line=keyword.lineno,
-            utf8_byte_offset=keyword.value.col_offset, old=old, new=new,
+            rename,
+            line=keyword.lineno,
+            utf8_byte_offset=keyword.value.col_offset,
+            old=old,
+            new=new,
         )
         yield ast_to_offset(node), func
