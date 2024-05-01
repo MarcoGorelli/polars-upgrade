@@ -2,22 +2,27 @@ from __future__ import annotations
 
 import ast
 import functools
-from collections.abc import Iterable
-
-from tokenize_rt import Offset
-from tokenize_rt import Token
+from typing import TYPE_CHECKING
 
 from polars_upgrade._ast_helpers import ast_to_offset
+from polars_upgrade._data import register
 from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
-from polars_upgrade._data import register
 from polars_upgrade._token_helpers import find_op
 from polars_upgrade._token_helpers import parse_call_args
+
+if TYPE_CHECKING:
+    from typing import Iterable
+    from typing import List
+    from typing import Tuple
+
+    from tokenize_rt import Offset
+    from tokenize_rt import Token
 
 
 def rewrite_to_enable(
     i: int,
-    tokens: list[Token],
+    tokens: List[Token],
 ) -> None:
     j = find_op(tokens, i, "(")
     func_args, _ = parse_call_args(tokens, j)
@@ -27,7 +32,7 @@ def rewrite_to_enable(
 
 def rewrite_to_disable(
     i: int,
-    tokens: list[Token],
+    tokens: List[Token],
 ) -> None:
     j = find_op(tokens, i, "(")
     func_args, _ = parse_call_args(tokens, j)
@@ -43,15 +48,15 @@ def visit_Call(
     state: State,
     node: ast.Call,
     parent: ast.AST,
-) -> Iterable[tuple[Offset, TokenFunc]]:
+) -> Iterable[Tuple[Offset, TokenFunc]]:
     if (
-        state.settings.target_version >= (0, 19, 3)
-        and isinstance(node.func, ast.Attribute)
-        and isinstance(node.func.value, ast.Name)
-        and node.func.attr == "enable_string_cache"
-        and node.func.value.id in state.aliases["polars"]
-        and len(node.args) == 1
-        and isinstance(node.args[0], ast.Constant)
+        state.settings.target_version >= (0, 19, 3) and
+        isinstance(node.func, ast.Attribute) and
+        isinstance(node.func.value, ast.Name) and
+        node.func.attr == "enable_string_cache" and
+        node.func.value.id in state.aliases["polars"] and
+        len(node.args) == 1 and
+        isinstance(node.args[0], ast.Constant)
     ):
         if node.args[0].value is True:
             func = functools.partial(

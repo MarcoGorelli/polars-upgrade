@@ -2,9 +2,15 @@ from __future__ import annotations
 
 import ast
 import warnings
-from collections.abc import Container
+from typing import TYPE_CHECKING
 
 from tokenize_rt import Offset
+
+if TYPE_CHECKING:
+    from typing import Container
+    from typing import Dict
+    from typing import Set
+    from typing import Tuple
 
 
 def ast_parse(contents_text: str) -> ast.Module:
@@ -20,19 +26,19 @@ def ast_to_offset(node: ast.expr | ast.stmt) -> Offset:
 
 def is_name_attr(
     node: ast.AST,
-    imports: dict[str, set[str]],
-    mods: tuple[str, ...],
+    imports: Dict[str, Set[str]],
+    mods: Tuple[str, ...],
     names: Container[str],
 ) -> bool:
     return (
-        isinstance(node, ast.Name)
-        and node.id in names
-        and any(node.id in imports[mod] for mod in mods)
+        isinstance(node, ast.Name) and
+        node.id in names and
+        any(node.id in imports[mod] for mod in mods)
     ) or (
-        isinstance(node, ast.Attribute)
-        and isinstance(node.value, ast.Name)
-        and node.value.id in mods
-        and node.attr in names
+        isinstance(node, ast.Attribute) and
+        isinstance(node.value, ast.Name) and
+        node.value.id in mods and
+        node.attr in names
     )
 
 
@@ -55,9 +61,9 @@ def is_async_listcomp(node: ast.ListComp) -> bool:
 
 def is_type_check(node: ast.AST) -> bool:
     return (
-        isinstance(node, ast.Call)
-        and isinstance(node.func, ast.Name)
-        and node.func.id in {"isinstance", "issubclass"}
-        and len(node.args) == 2
-        and not has_starargs(node)
+        isinstance(node, ast.Call) and
+        isinstance(node.func, ast.Name) and
+        node.func.id in {"isinstance", "issubclass"} and
+        len(node.args) == 2 and
+        not has_starargs(node)
     )

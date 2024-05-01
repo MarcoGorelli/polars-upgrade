@@ -2,20 +2,25 @@ from __future__ import annotations
 
 import ast
 import functools
-from collections.abc import Iterable
-
-from tokenize_rt import Offset
-from tokenize_rt import Token
+from typing import TYPE_CHECKING
 
 from polars_upgrade._ast_helpers import ast_to_offset
+from polars_upgrade._data import register
 from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
-from polars_upgrade._data import register
+
+if TYPE_CHECKING:
+    from typing import Iterable
+    from typing import List
+    from typing import Tuple
+
+    from tokenize_rt import Offset
+    from tokenize_rt import Token
 
 
 def rename(
     i: int,
-    tokens: list[Token],
+    tokens: List[Token],
     *,
     name: str,
     new: str,
@@ -27,7 +32,7 @@ def rename(
 
 def rename_and_add_argument(
     i: int,
-    tokens: list[Token],
+    tokens: List[Token],
     *,
     name: str,
     new: str,
@@ -46,24 +51,24 @@ def visit_Call(
     state: State,
     node: ast.Call,
     parent: ast.AST,
-) -> Iterable[tuple[Offset, TokenFunc]]:
+) -> Iterable[Tuple[Offset, TokenFunc]]:
     # If `name` was specified we can just rename, easy
     if (
-        isinstance(node.func, ast.Attribute)
-        and node.func.attr == "with_row_count"
-        and (node.args or "name" in {kw.arg for kw in node.keywords})
-        and state.settings.target_version >= (0, 20, 4)
+        isinstance(node.func, ast.Attribute) and
+        node.func.attr == "with_row_count" and
+        (node.args or "name" in {kw.arg for kw in node.keywords}) and
+        state.settings.target_version >= (0, 20, 4)
     ):
         func = functools.partial(rename, name=node.func.attr, new="with_row_index")
         yield ast_to_offset(node), func
 
     # If no `name` was specified, we set it to 'row_nr' to not break code
     if (
-        isinstance(node.func, ast.Attribute)
-        and node.func.attr == "with_row_count"
-        and not node.args
-        and "name" not in {kw.arg for kw in node.keywords}
-        and state.settings.target_version >= (0, 20, 4)
+        isinstance(node.func, ast.Attribute) and
+        node.func.attr == "with_row_count" and
+        not node.args and
+        "name" not in {kw.arg for kw in node.keywords} and
+        state.settings.target_version >= (0, 20, 4)
     ):
         func = functools.partial(
             rename_and_add_argument,

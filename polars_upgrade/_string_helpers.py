@@ -3,18 +3,20 @@ from __future__ import annotations
 import codecs
 import re
 import string
+from typing import List
 from typing import Optional
+from typing import Tuple
 
 NAMED_UNICODE_RE = re.compile(r"(?<!\\)(?:\\\\)*(\\N\{[^}]+\})")
 
-DotFormatPart = tuple[str, Optional[str], Optional[str], Optional[str]]
+DotFormatPart = Tuple[str, Optional[str], Optional[str], Optional[str]]
 
 _stdlib_parse_format = string.Formatter().parse
 
 
-def parse_format(s: str) -> list[DotFormatPart]:
+def parse_format(s: str) -> List[DotFormatPart]:
     """handle named escape sequences"""
-    ret: list[DotFormatPart] = []
+    ret: List[DotFormatPart] = []
 
     for part in NAMED_UNICODE_RE.split(s):
         if NAMED_UNICODE_RE.fullmatch(part):
@@ -37,7 +39,7 @@ def parse_format(s: str) -> list[DotFormatPart]:
     return ret
 
 
-def unparse_parsed_string(parsed: list[DotFormatPart]) -> str:
+def unparse_parsed_string(parsed: List[DotFormatPart]) -> str:
     def _convert_tup(tup: DotFormatPart) -> str:
         ret, field_name, format_spec, conversion = tup
         ret = curly_escape(ret)

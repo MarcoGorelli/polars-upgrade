@@ -3,10 +3,13 @@ from __future__ import annotations
 import ast
 import collections
 import pkgutil
-from collections.abc import Iterable
 from typing import Callable
+from typing import Dict
+from typing import Iterable
+from typing import List
 from typing import NamedTuple
 from typing import Protocol
+from typing import Tuple
 from typing import TypeVar
 
 from tokenize_rt import Offset
@@ -14,7 +17,7 @@ from tokenize_rt import Token
 
 from polars_upgrade import _plugins
 
-Version = tuple[int, ...]
+Version = Tuple[int, ...]
 
 
 class Settings(NamedTuple):
@@ -23,13 +26,13 @@ class Settings(NamedTuple):
 
 class State(NamedTuple):
     settings: Settings
-    aliases: dict[str, set[str]]
+    aliases: Dict[str, set[str]]
     in_annotation: bool = False
 
 
 AST_T = TypeVar("AST_T", bound=ast.AST)
-TokenFunc = Callable[[int, list[Token]], None]
-ASTFunc = Callable[[State, AST_T, ast.AST], Iterable[tuple[Offset, TokenFunc]]]
+TokenFunc = Callable[[int, List[Token]], None]
+ASTFunc = Callable[[State, AST_T, ast.AST], Iterable[Tuple[Offset, TokenFunc]]]
 
 RECORD_FROM_IMPORTS = frozenset(("polars",))
 
@@ -45,7 +48,7 @@ def register(tp: type[AST_T]) -> Callable[[ASTFunc[AST_T]], ASTFunc[AST_T]]:
 
 
 class ASTCallbackMapping(Protocol):
-    def __getitem__(self, tp: type[AST_T]) -> list[ASTFunc[AST_T]]: ...
+    def __getitem__(self, tp: type[AST_T]) -> List[ASTFunc[AST_T]]: ...
 
 
 def visit(
@@ -53,7 +56,7 @@ def visit(
     tree: ast.Module,
     settings: Settings,
     aliases: set[str] | None = None,
-) -> dict[Offset, list[TokenFunc]]:
+) -> Dict[Offset, List[TokenFunc]]:
     if aliases is not None:
         _aliases = collections.defaultdict(set)
         _aliases["polars"].update(aliases)
@@ -68,7 +71,7 @@ def visit(
             aliases=_aliases,
         )
 
-    nodes: list[tuple[State, ast.AST, ast.AST]] = [(initial_state, tree, tree)]
+    nodes: List[Tuple[State, ast.AST, ast.AST]] = [(initial_state, tree, tree)]
 
     ret = collections.defaultdict(list)
     while nodes:

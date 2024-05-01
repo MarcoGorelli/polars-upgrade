@@ -2,20 +2,25 @@ from __future__ import annotations
 
 import ast
 import functools
-from collections.abc import Iterable
-
-from tokenize_rt import Offset
-from tokenize_rt import Token
+from typing import TYPE_CHECKING
 
 from polars_upgrade._ast_helpers import ast_to_offset
+from polars_upgrade._data import register
 from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
-from polars_upgrade._data import register
+
+if TYPE_CHECKING:
+    from typing import Iterable
+    from typing import List
+    from typing import Tuple
+
+    from tokenize_rt import Offset
+    from tokenize_rt import Token
 
 
 def rename(
     i: int,
-    tokens: list[Token],
+    tokens: List[Token],
     *,
     line: int,
     utf8_byte_offset: int,
@@ -41,12 +46,11 @@ def visit_Call(
     state: State,
     node: ast.Call,
     parent: ast.AST,
-) -> Iterable[tuple[Offset, TokenFunc]]:
+) -> Iterable[Tuple[Offset, TokenFunc]]:
     if (
-        isinstance(node.func, ast.Attribute)
-        and node.func.attr == "pivot"
-        and node.args
-        and
+        isinstance(node.func, ast.Attribute) and
+        node.func.attr == "pivot" and
+        node.args and
         # check that it's probably not pandas, either because of unique keywords
         # or because pandas was never imported in this file
         (
@@ -58,11 +62,11 @@ def visit_Call(
                     "sort_columns",
                     "maintain_order",
                 ]
-            )
-            or len(node.args) > 3
-            or ("pandas" not in state.aliases)
-        )
-        and state.settings.target_version >= (0, 20, 8)
+            ) or
+            len(node.args) > 3 or
+            ("pandas" not in state.aliases)
+        ) and
+        state.settings.target_version >= (0, 20, 8)
     ):
         for i, arg in enumerate(node.args):
             if isinstance(arg, ast.Name):

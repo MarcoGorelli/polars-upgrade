@@ -2,21 +2,26 @@ from __future__ import annotations
 
 import ast
 import functools
-from collections.abc import Iterable
-
-from tokenize_rt import Offset
-from tokenize_rt import Token
+from typing import TYPE_CHECKING
 
 from polars_upgrade._ast_helpers import ast_to_offset
+from polars_upgrade._data import register
 from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
-from polars_upgrade._data import register
 from polars_upgrade._token_helpers import is_simple_expression
+
+if TYPE_CHECKING:
+    from typing import Iterable
+    from typing import List
+    from typing import Tuple
+
+    from tokenize_rt import Offset
+    from tokenize_rt import Token
 
 
 def rename(
     i: int,
-    tokens: list[Token],
+    tokens: List[Token],
     *,
     line: int,
     utf8_byte_offset: int,
@@ -46,13 +51,13 @@ def visit_Attribute(
     state: State,
     node: ast.Attribute,
     parent: ast.AST,
-) -> Iterable[tuple[Offset, TokenFunc]]:
+) -> Iterable[Tuple[Offset, TokenFunc]]:
     if (
-        is_simple_expression(node.value, state.aliases["polars"])
-        and isinstance(parent, ast.Call)
-        and isinstance(parent.func, ast.Attribute)
-        and parent.func.attr in RENAMINGS
-        and (isinstance(node.value, ast.Attribute) and node.value.attr == "list")
+        is_simple_expression(node.value, state.aliases["polars"]) and
+        isinstance(parent, ast.Call) and
+        isinstance(parent.func, ast.Attribute) and
+        parent.func.attr in RENAMINGS and
+        (isinstance(node.value, ast.Attribute) and node.value.attr == "list")
     ):
         min_version, old, new = RENAMINGS[parent.func.attr]
         for keyword in parent.keywords:

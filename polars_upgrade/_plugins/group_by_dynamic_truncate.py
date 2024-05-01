@@ -2,23 +2,28 @@ from __future__ import annotations
 
 import ast
 import functools
-from collections.abc import Iterable
-
-from tokenize_rt import Offset
-from tokenize_rt import Token
+from typing import TYPE_CHECKING
 
 from polars_upgrade._ast_helpers import ast_to_offset
+from polars_upgrade._data import register
 from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
-from polars_upgrade._data import register
 from polars_upgrade._token_helpers import find_op
 from polars_upgrade._token_helpers import parse_call_args
 from polars_upgrade._token_helpers import replace_argument
 
+if TYPE_CHECKING:
+    from typing import Iterable
+    from typing import List
+    from typing import Tuple
+
+    from tokenize_rt import Offset
+    from tokenize_rt import Token
+
 
 def _use_label(
     i: int,
-    tokens: list[Token],
+    tokens: List[Token],
     *,
     truncate_value: object,
     truncate_idx: int,
@@ -44,18 +49,18 @@ def visit_Call(
     state: State,
     node: ast.Call,
     parent: ast.AST,
-) -> Iterable[tuple[Offset, TokenFunc]]:
+) -> Iterable[Tuple[Offset, TokenFunc]]:
     if (
-        isinstance(node.func, ast.Attribute)
-        and node.func.attr == "group_by_dynamic"
-        and len(node.keywords) >= 1
-        and state.settings.target_version >= (0, 19, 4)
+        isinstance(node.func, ast.Attribute) and
+        node.func.attr == "group_by_dynamic" and
+        len(node.keywords) >= 1 and
+        state.settings.target_version >= (0, 19, 4)
     ):
         truncate_idx = None
         truncate_value = None
         for n, keyword_argument in enumerate(node.keywords):
             if keyword_argument.arg == "truncate" and isinstance(
-                keyword_argument.value, ast.Constant
+                keyword_argument.value, ast.Constant,
             ):
                 truncate_idx = n
                 truncate_value = keyword_argument.value.value

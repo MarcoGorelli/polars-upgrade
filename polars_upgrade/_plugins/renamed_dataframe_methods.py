@@ -2,20 +2,25 @@ from __future__ import annotations
 
 import ast
 import functools
-from collections.abc import Iterable
-
-from tokenize_rt import Offset
-from tokenize_rt import Token
+from typing import TYPE_CHECKING
 
 from polars_upgrade._ast_helpers import ast_to_offset
+from polars_upgrade._data import register
 from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
-from polars_upgrade._data import register
+
+if TYPE_CHECKING:
+    from typing import Iterable
+    from typing import List
+    from typing import Tuple
+
+    from tokenize_rt import Offset
+    from tokenize_rt import Token
 
 
 def rename(
     i: int,
-    tokens: list[Token],
+    tokens: List[Token],
     *,
     name: str,
     new: str,
@@ -36,7 +41,7 @@ def visit_Attribute(
     state: State,
     node: ast.Attribute,
     parent: ast.AST,
-) -> Iterable[tuple[Offset, TokenFunc]]:
+) -> Iterable[Tuple[Offset, TokenFunc]]:
     if node.attr in RENAMINGS:
         min_version, new_name = RENAMINGS[node.attr]
         if state.settings.target_version >= min_version:

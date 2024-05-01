@@ -4,23 +4,29 @@ from __future__ import annotations
 
 import ast
 import functools
-from collections.abc import Iterable
+from typing import TYPE_CHECKING
 
 from tokenize_rt import NON_CODING_TOKENS
-from tokenize_rt import Offset
 from tokenize_rt import Token
 
 from polars_upgrade._ast_helpers import ast_to_offset
+from polars_upgrade._data import register
 from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
-from polars_upgrade._data import register
 from polars_upgrade._token_helpers import find_op
 from polars_upgrade._token_helpers import is_simple_expression
+
+if TYPE_CHECKING:
+    from typing import Iterable
+    from typing import List
+    from typing import Tuple
+
+    from tokenize_rt import Offset
 
 
 def rename(
     i: int,
-    tokens: list[Token],
+    tokens: List[Token],
     *,
     name: str,
     new: str,
@@ -32,7 +38,7 @@ def rename(
 
 def rename_and_add_default(
     i: int,
-    tokens: list[Token],
+    tokens: List[Token],
     *,
     name: str,
     new: str,
@@ -62,12 +68,12 @@ def visit_Call(
     state: State,
     node: ast.Call,
     parent: ast.AST,
-) -> Iterable[tuple[Offset, TokenFunc]]:
+) -> Iterable[Tuple[Offset, TokenFunc]]:
     if (
-        isinstance(node.func, ast.Attribute)
-        and is_simple_expression(node.func.value, state.aliases["polars"])
-        and node.func.attr == "map_dict"
-        and state.settings.target_version >= (0, 19, 16)
+        isinstance(node.func, ast.Attribute) and
+        is_simple_expression(node.func.value, state.aliases["polars"]) and
+        node.func.attr == "map_dict" and
+        state.settings.target_version >= (0, 19, 16)
     ):
         if any(k.arg == "default" for k in node.keywords):
             func = functools.partial(

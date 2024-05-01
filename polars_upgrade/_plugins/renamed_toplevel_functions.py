@@ -2,15 +2,19 @@ from __future__ import annotations
 
 import ast
 import functools
-from collections.abc import Iterable
-
-from tokenize_rt import Offset
+from typing import TYPE_CHECKING
 
 from polars_upgrade._ast_helpers import ast_to_offset
+from polars_upgrade._data import register
 from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
-from polars_upgrade._data import register
 from polars_upgrade._token_helpers import replace_name
+
+if TYPE_CHECKING:
+    from typing import Iterable
+    from typing import Tuple
+
+    from tokenize_rt import Offset
 
 RENAMINGS = {
     "avg": ((0, 18, 12), "mean"),
@@ -29,11 +33,11 @@ def visit_Attribute(
     state: State,
     node: ast.Attribute,
     parent: ast.AST,
-) -> Iterable[tuple[Offset, TokenFunc]]:
+) -> Iterable[Tuple[Offset, TokenFunc]]:
     if (
-        isinstance(node.value, ast.Name)
-        and node.value.id in state.aliases["polars"]
-        and node.attr in RENAMINGS
+        isinstance(node.value, ast.Name) and
+        node.value.id in state.aliases["polars"] and
+        node.attr in RENAMINGS
     ):
         min_version, new_name = RENAMINGS[node.attr]
         if state.settings.target_version >= min_version:

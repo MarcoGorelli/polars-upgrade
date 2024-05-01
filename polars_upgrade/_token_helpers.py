@@ -3,26 +3,28 @@ from __future__ import annotations
 
 import ast
 import keyword
-from collections.abc import Sequence
+from typing import List
 from typing import NamedTuple
+from typing import Sequence
+from typing import Tuple
 
 from tokenize_rt import NON_CODING_TOKENS
-from tokenize_rt import UNIMPORTANT_WS
 from tokenize_rt import Token
 from tokenize_rt import tokens_to_src
+from tokenize_rt import UNIMPORTANT_WS
 
 _OPENING = frozenset("([{")
 _CLOSING = frozenset(")]}")
 KEYWORDS = frozenset(keyword.kwlist)
 
 
-def immediately_paren(func: str, tokens: list[Token], i: int) -> bool:
+def immediately_paren(func: str, tokens: List[Token], i: int) -> bool:
     return tokens[i].src == func and tokens[i + 1].src == "("
 
 
 class Victims(NamedTuple):
-    starts: list[int]
-    ends: list[int]
+    starts: List[int]
+    ends: List[int]
     first_comma_index: int | None
     arg_index: int
 
@@ -35,28 +37,28 @@ def is_close(token: Token) -> bool:
     return token.name == "OP" and token.src in _CLOSING
 
 
-def _find_token(tokens: list[Token], i: int, name: str, src: str) -> int:
+def _find_token(tokens: List[Token], i: int, name: str, src: str) -> int:
     while not tokens[i].matches(name=name, src=src):
         i += 1
     return i
 
 
-def find_name(tokens: list[Token], i: int, src: str) -> int:
+def find_name(tokens: List[Token], i: int, src: str) -> int:
     return _find_token(tokens, i, "NAME", src)
 
 
-def find_op(tokens: list[Token], i: int, src: str) -> int:
+def find_op(tokens: List[Token], i: int, src: str) -> int:
     return _find_token(tokens, i, "OP", src)
 
 
-def find_end(tokens: list[Token], i: int) -> int:
+def find_end(tokens: List[Token], i: int) -> int:
     while tokens[i].name != "NEWLINE":
         i += 1
 
     return i + 1
 
 
-def _arg_token_index(tokens: list[Token], i: int, arg: ast.expr) -> int:
+def _arg_token_index(tokens: List[Token], i: int, arg: ast.expr) -> int:
     offset = (arg.lineno, arg.col_offset)
     while tokens[i].offset != offset:
         i += 1
@@ -67,14 +69,14 @@ def _arg_token_index(tokens: list[Token], i: int, arg: ast.expr) -> int:
 
 
 def victims(
-    tokens: list[Token],
+    tokens: List[Token],
     start: int,
     arg: ast.expr,
     gen: bool,
 ) -> Victims:
     starts = [start]
     start_depths = [1]
-    ends: list[int] = []
+    ends: List[int] = []
     first_comma_index = None
     arg_depth = None
     arg_index = _arg_token_index(tokens, start, arg)
@@ -98,9 +100,9 @@ def victims(
             starts.append(i)
 
         if (
-            tokens[i].matches(name="OP", src=",")
-            and depth == arg_depth
-            and first_comma_index is None
+            tokens[i].matches(name="OP", src=",") and
+            depth == arg_depth and
+            first_comma_index is None
         ):
             first_comma_index = i
 
@@ -129,7 +131,7 @@ def victims(
     return Victims(starts, sorted(set(ends)), first_comma_index, arg_index)
 
 
-def find_closing_bracket(tokens: list[Token], i: int) -> int:
+def find_closing_bracket(tokens: List[Token], i: int) -> int:
     assert tokens[i].src in _OPENING
     depth = 1
     i += 1
@@ -142,7 +144,7 @@ def find_closing_bracket(tokens: list[Token], i: int) -> int:
     return i - 1
 
 
-def find_block_start(tokens: list[Token], i: int) -> int:
+def find_block_start(tokens: List[Token], i: int) -> int:
     depth = 0
     while depth or not tokens[i].matches(name="OP", src=":"):
         if is_open(tokens[i]):
@@ -160,19 +162,18 @@ class Block(NamedTuple):
     end: int
     line: bool
 
-    def _initial_indent(self, tokens: list[Token]) -> int:
+    def _initial_indent(self, tokens: List[Token]) -> int:
         if tokens[self.start].src.isspace():
             return len(tokens[self.start].src)
         else:
             return 0
 
-    def _minimum_indent(self, tokens: list[Token]) -> int:
+    def _minimum_indent(self, tokens: List[Token]) -> int:
         block_indent = None
         for i in range(self.block, self.end):
             if (
-                tokens[i - 1].name in ("NL", "NEWLINE")
-                and tokens[i].name in ("INDENT", UNIMPORTANT_WS)
-                and
+                tokens[i - 1].name in ("NL", "NEWLINE") and
+                tokens[i].name in ("INDENT", UNIMPORTANT_WS) and
                 # comments can have arbitrary indentation so ignore them
                 tokens[i + 1].name != "COMMENT"
             ):
@@ -185,7 +186,7 @@ class Block(NamedTuple):
         assert block_indent is not None
         return block_indent
 
-    def dedent(self, tokens: list[Token]) -> None:
+    def dedent(self, tokens: List[Token]) -> None:
         if self.line:
             return
         initial_indent = self._initial_indent(tokens)
@@ -197,16 +198,16 @@ class Block(NamedTuple):
             ):
                 # make sure we preserve *at least* the initial indent
                 s = tokens[i].src
-                s = s[:initial_indent] + s[initial_indent + diff :]
+                s = s[:initial_indent] + s[initial_indent + diff:]
                 tokens[i] = tokens[i]._replace(src=s)
 
-    def replace_condition(self, tokens: list[Token], new: list[Token]) -> None:
+    def replace_condition(self, tokens: List[Token], new: List[Token]) -> None:
         start = self.start
         while tokens[start].name == "UNIMPORTANT_WS":
             start += 1
-        tokens[start : self.colon] = new
+        tokens[start: self.colon] = new
 
-    def _trim_end(self, tokens: list[Token]) -> Block:
+    def _trim_end(self, tokens: List[Token]) -> Block:
         """the tokenizer reports the end of the block at the beginning of
         the next block
         """
@@ -214,9 +215,9 @@ class Block(NamedTuple):
         while tokens[i].name in NON_CODING_TOKENS | {"DEDENT", "NEWLINE"}:
             # if we find an indented comment inside our block, keep it
             if (
-                tokens[i].name in {"NL", "NEWLINE"}
-                and tokens[i + 1].name == UNIMPORTANT_WS
-                and len(tokens[i + 1].src) > self._initial_indent(tokens)
+                tokens[i].name in {"NL", "NEWLINE"} and
+                tokens[i + 1].name == UNIMPORTANT_WS and
+                len(tokens[i + 1].src) > self._initial_indent(tokens)
             ):
                 break
             # otherwise we've found another line to remove
@@ -228,7 +229,7 @@ class Block(NamedTuple):
     @classmethod
     def find(
         cls,
-        tokens: list[Token],
+        tokens: List[Token],
         i: int,
         trim_end: bool = False,
     ) -> Block:
@@ -261,22 +262,22 @@ class Block(NamedTuple):
             return cls(start, colon, block, j, line=True)
 
 
-def _is_on_a_line_by_self(tokens: list[Token], i: int) -> bool:
+def _is_on_a_line_by_self(tokens: List[Token], i: int) -> bool:
     return (
-        tokens[i - 2].name == "NL"
-        and tokens[i - 1].name == UNIMPORTANT_WS
-        and tokens[i + 1].name == "NL"
+        tokens[i - 2].name == "NL" and
+        tokens[i - 1].name == UNIMPORTANT_WS and
+        tokens[i + 1].name == "NL"
     )
 
 
-def remove_brace(tokens: list[Token], i: int) -> None:
+def remove_brace(tokens: List[Token], i: int) -> None:
     if _is_on_a_line_by_self(tokens, i):
-        del tokens[i - 1 : i + 2]
+        del tokens[i - 1: i + 2]
     else:
         del tokens[i]
 
 
-def remove_base_class(i: int, tokens: list[Token]) -> None:
+def remove_base_class(i: int, tokens: List[Token]) -> None:
     # look forward and backward to find commas / parens
     brace_stack = []
     j = i
@@ -321,13 +322,13 @@ def remove_base_class(i: int, tokens: list[Token]) -> None:
         # if there's space / comment afterwards remove that too
         while tokens[right + 1].name in {UNIMPORTANT_WS, "COMMENT"}:
             right += 1
-        del tokens[left + 1 : right + 1]
+        del tokens[left + 1: right + 1]
     # multiple bases, base is not first
     else:
-        del tokens[left : last_part + 1]
+        del tokens[left: last_part + 1]
 
 
-def remove_decorator(i: int, tokens: list[Token]) -> None:
+def remove_decorator(i: int, tokens: List[Token]) -> None:
     while tokens[i - 1].src != "@":
         i -= 1
     if i > 1 and tokens[i - 2].name not in {"NEWLINE", "NL"}:
@@ -335,13 +336,13 @@ def remove_decorator(i: int, tokens: list[Token]) -> None:
     end = i + 1
     while tokens[end].name != "NEWLINE":
         end += 1
-    del tokens[i - 1 : end + 1]
+    del tokens[i - 1: end + 1]
 
 
 def parse_call_args(
-    tokens: list[Token],
+    tokens: List[Token],
     i: int,
-) -> tuple[list[tuple[int, int]], int]:
+) -> Tuple[List[Tuple[int, int]], int]:
     args = []
     depth = 1
     i += 1
@@ -364,11 +365,11 @@ def parse_call_args(
     return args, i
 
 
-def arg_str(tokens: list[Token], start: int, end: int) -> str:
+def arg_str(tokens: List[Token], start: int, end: int) -> str:
     return tokens_to_src(tokens[start:end]).strip()
 
 
-def _arg_contains_newline(tokens: list[Token], start: int, end: int) -> bool:
+def _arg_contains_newline(tokens: List[Token], start: int, end: int) -> bool:
     while tokens[start].name in {"NL", "NEWLINE", UNIMPORTANT_WS}:
         start += 1
     for i in range(start, end):
@@ -378,10 +379,10 @@ def _arg_contains_newline(tokens: list[Token], start: int, end: int) -> bool:
 
 
 def replace_call(
-    tokens: list[Token],
+    tokens: List[Token],
     start: int,
     end: int,
-    args: list[tuple[int, int]],
+    args: List[Tuple[int, int]],
     tmpl: str,
     *,
     parens: Sequence[int] = (),
@@ -414,17 +415,17 @@ def replace_call(
 
 def find_and_replace_call(
     i: int,
-    tokens: list[Token],
+    tokens: List[Token],
     *,
     template: str,
-    parens: tuple[int, ...] = (),
+    parens: Tuple[int, ...] = (),
 ) -> None:
     j = find_op(tokens, i, "(")
     func_args, end = parse_call_args(tokens, j)
     replace_call(tokens, i, end, func_args, template, parens=parens)
 
 
-def replace_name(i: int, tokens: list[Token], *, name: str, new: str) -> None:
+def replace_name(i: int, tokens: List[Token], *, name: str, new: str) -> None:
     # preserve token offset in case we need to match it later
     new_token = tokens[i]._replace(name="CODE", src=new)
     j = i
@@ -433,13 +434,13 @@ def replace_name(i: int, tokens: list[Token], *, name: str, new: str) -> None:
         if tokens[j].src == ")":
             return
         j += 1
-    tokens[i : j + 1] = [new_token]
+    tokens[i: j + 1] = [new_token]
 
 
 def delete_argument(
     i: int,
-    tokens: list[Token],
-    func_args: Sequence[tuple[int, int]],
+    tokens: List[Token],
+    func_args: Sequence[Tuple[int, int]],
 ) -> None:
     if i == 0:
         # delete leading whitespace before next token
@@ -447,15 +448,15 @@ def delete_argument(
         while tokens[end_idx].name == "UNIMPORTANT_WS":
             end_idx += 1
 
-        del tokens[func_args[i][0] : end_idx]
+        del tokens[func_args[i][0]: end_idx]
     else:
-        del tokens[func_args[i - 1][1] : func_args[i][1]]
+        del tokens[func_args[i - 1][1]: func_args[i][1]]
 
 
 def replace_argument(
     i: int,
-    tokens: list[Token],
-    func_args: Sequence[tuple[int, int]],
+    tokens: List[Token],
+    func_args: Sequence[Tuple[int, int]],
     *,
     new: str,
 ) -> None:
@@ -466,7 +467,7 @@ def replace_argument(
     tokens[start_idx:end_idx] = [Token("SRC", new)]
 
 
-def constant_fold_tuple(i: int, tokens: list[Token]) -> None:
+def constant_fold_tuple(i: int, tokens: List[Token]) -> None:
     start = find_op(tokens, i, "(")
     func_args, end = parse_call_args(tokens, start)
     arg_strs = [arg_str(tokens, *arg) for arg in func_args]
@@ -483,11 +484,11 @@ def constant_fold_tuple(i: int, tokens: list[Token]) -> None:
     tokens[start:end] = [Token("CODE", joined)]
 
 
-def has_space_before(i: int, tokens: list[Token]) -> bool:
+def has_space_before(i: int, tokens: List[Token]) -> bool:
     return i >= 1 and tokens[i - 1].name in {UNIMPORTANT_WS, "INDENT"}
 
 
-def indented_amount(i: int, tokens: list[Token]) -> str:
+def indented_amount(i: int, tokens: List[Token]) -> str:
     if i == 0:
         return ""
     elif has_space_before(i, tokens):
@@ -506,10 +507,10 @@ def is_simple_expression(node: ast.expr, aliases: set[str]) -> bool:
         if isinstance(node, ast.Call):
             node = node.func
         elif (
-            isinstance(node, ast.Attribute)
-            and node.attr.islower()
-            and isinstance(node.value, ast.Name)
-            and node.value.id in aliases
+            isinstance(node, ast.Attribute) and
+            node.attr.islower() and
+            isinstance(node.value, ast.Name) and
+            node.value.id in aliases
         ):
             return True
         elif isinstance(node, ast.Attribute):
