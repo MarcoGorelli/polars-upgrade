@@ -8,9 +8,9 @@ from tokenize_rt import Offset
 from tokenize_rt import Token
 
 from polars_upgrade._ast_helpers import ast_to_offset
+from polars_upgrade._data import register
 from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
-from polars_upgrade._data import register
 
 
 def rename(
@@ -36,6 +36,7 @@ def rename(
 # function name -> (min_version, old, new)
 RENAMINGS = {
     "write_database": ((0, 20, 0), "if_exists", "if_table_exists"),
+    "rolling": ((0, 20, 14), "by", "group_by"),
 }
 
 
@@ -46,9 +47,9 @@ def visit_Call(
     parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-        isinstance(node.func, ast.Attribute)
-        and node.func.attr in RENAMINGS
-        and len(node.keywords) >= 1
+        isinstance(node.func, ast.Attribute) and
+        node.func.attr in RENAMINGS and
+        len(node.keywords) >= 1
     ):
         min_version, old, new = RENAMINGS[node.func.attr]
         if not state.settings.target_version >= min_version:
