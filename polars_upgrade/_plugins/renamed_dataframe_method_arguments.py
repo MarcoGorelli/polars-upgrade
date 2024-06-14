@@ -37,6 +37,8 @@ def rename(
 RENAMINGS = {
     "write_database": ((0, 20, 0), "if_exists", "if_table_exists"),
     "rolling": ((0, 20, 14), "by", "group_by"),
+    "group_by_dynamic": ((0, 20, 14), "by", "group_by"),
+    "upsample": ((0, 20, 14), "by", "group_by"),
 }
 
 

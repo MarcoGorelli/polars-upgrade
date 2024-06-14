@@ -8,9 +8,9 @@ from tokenize_rt import Offset
 from tokenize_rt import Token
 
 from polars_upgrade._ast_helpers import ast_to_offset
+from polars_upgrade._data import register
 from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
-from polars_upgrade._data import register
 
 
 def rename(
@@ -36,6 +36,7 @@ def rename(
 # function name -> (min_version, argument, old, new)
 RENAMINGS = {
     "pivot": ((0, 20, 5), "aggregate_function", "count", "len"),
+    "join": ((0, 20, 29), "how", "outer", "full"),
 }
 
 
