@@ -13,6 +13,16 @@ from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
 from polars_upgrade._token_helpers import is_simple_expression
 
+FUNCTIONS = (
+    'rolling_min',
+    'rolling_max',
+    'rolling_mean',
+    'rolling_sum',
+    'rolling_prod',
+    'rolling_std',
+    'rolling_var',
+)
+
 
 def rename(
     i: int,
@@ -53,7 +63,7 @@ def visit_Attribute(
         is_simple_expression(node.value, state.aliases["polars"]) and
         isinstance(parent, ast.Call) and
         isinstance(parent.func, ast.Attribute) and
-        parent.func.attr in ('rolling_min',) and
+        parent.func.attr in FUNCTIONS and
         not (
             isinstance(parent.func.value, ast.Attribute) and
             parent.func.value.attr in ("list", "name", "str", "struct", "dt")
@@ -62,14 +72,14 @@ def visit_Attribute(
         not parent.args and
         state.settings.target_version >= (0, 20, 24)
     ):
-        func = functools.partial(rename, name=parent.func.attr, new="rolling_min_by")
+        func = functools.partial(rename, name=parent.func.attr, new=f"{parent.func.attr}_by")
         yield ast_to_offset(node), func
 
     if (
         is_simple_expression(node.value, state.aliases["polars"]) and
         isinstance(parent, ast.Call) and
         isinstance(parent.func, ast.Attribute) and
-        parent.func.attr in ('rolling_min',) and
+        parent.func.attr in FUNCTIONS and
         not (
             isinstance(parent.func.value, ast.Attribute) and
             parent.func.value.attr in ("list", "name", "str", "struct", "dt")
@@ -89,7 +99,7 @@ def visit_Attribute(
             return
         func = functools.partial(
             rename_function_and_name_argument,
-            name=parent.func.attr, new="rolling_min_by",
+            name=parent.func.attr, new=f'{parent.func.attr}_by',
             unnamed_argument=unnamed_argument,
             named_argument=named_argument,
         )
