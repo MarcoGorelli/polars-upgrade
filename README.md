@@ -307,8 +307,6 @@ df.select(pl.len())
 ```diff
 - pl.col('a').meta.write_json
 + pl.col('a').meta.serialize
-- lf.approx_n_unique()
-+ lf.select(pl.all().approx_n_unique())
 ```
 
 ## Notes
