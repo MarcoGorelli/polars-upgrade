@@ -18,9 +18,9 @@ pip install -U polars-upgrade
 
 Run
 ```
-polars-upgrade my_project --target-version=0.20.4
+polars-upgrade my_project --target-version=0.20.31
 ```
-from the command line. Replace `0.20.4` and `my_project` with your Polars version,
+from the command line. Replace `0.20.31` and `my_project` with your Polars version,
 and the name of your directory.
 
 NOTE: this tool will modify your code!
@@ -33,14 +33,14 @@ You're advised to stage your files before running it.
     rev: 0.3.3  # polars-upgrade version goes here
     hooks:
     -   id: polars-upgrade
-        args: [--target-version=0.20.0]  # Polars version goes here
+        args: [--target-version=0.20.31]  # Polars version goes here
 ```
 
 ## Usage (Jupyter Notebooks)
 
 Install [nbqa](https://github.com/nbQA-dev/nbQA) and then run
 ```
-nbqa polars_upgrade my_project --target-version=0.20.4
+nbqa polars_upgrade my_project --target-version=0.20.31
 ```
 
 ## Usage (library)
@@ -201,7 +201,7 @@ df.select(pl.len())
 + pl.col('a').rjust(length=3)
 ```
 
-### Version 0.19.13
+### Version 0.19.13+
 ```diff
 - pl.col('a').dt.milliseconds
 + pl.col('a').dt.total_milliseconds
@@ -212,7 +212,7 @@ df.select(pl.len())
 ```
 (and so on for other units)
 
-### Version 0.19.14
+### Version 0.19.14+
 ```diff
 - pl.col('a').list.take
 + pl.col('a').list.gather
@@ -252,7 +252,7 @@ df.select(pl.len())
 + pl.col('a').str.json_decode
 ```
 
-### Version 0.19.16
+### Version 0.19.16+
 ```diff
 - pl.col('a').map_dict({'a': 'b'})
 + pl.col('a').replace({'a': 'b'}, default=None)
@@ -260,13 +260,13 @@ df.select(pl.len())
 + pl.col('a').replace({'a': 'b'}, default='c')
 ```
 
-### Version 0.20.0
+### Version 0.20.0+
 ```diff
 - df.write_database(table_name='foo', if_exists="append")
 + df.write_database(table_name='foo', if_table_exists="append")
 ```
 
-### Version 0.20.4
+### Version 0.20.4+
 ```diff
 - pl.col('a').where
 + pl.col('a').filter
@@ -279,37 +279,37 @@ df.select(pl.len())
 [...and similarly for `read_csv`, `read_csv_batched`, `scan_csv`, `read_ipc`, `read_ipc_stream`, `scan_ipc`, `read_parquet`, `scan_parquet`]
 ```
 
-### Version 0.20.5
+### Version 0.20.5+
 ```diff
 - df.pivot(index=index, values=values, columns=columns, aggregate_function='count')
 + df.pivot(index=index, values=values, columns=columns, aggregate_function='len')
 ```
 
-### Version 0.20.6
+### Version 0.20.6+
 ```diff
 - pl.read_excel(source, xlsx2csv_options=options, read_csv_options=read_options)
 + pl.read_excel(source, engine_options=options, read_options=read_options)
 ```
 
-### Version 0.20.7
+### Version 0.20.7+
 ```diff
 - pl.threadpool_size
 + pl.thread_pool_size
 ```
 
-### Version 0.20.8
+### Version 0.20.8+
 ```diff
 - df.pivot(a, b, c)
 + df.pivot(values=a, index=b, columns=c)
 ```
 
-### Version 0.20.11
+### Version 0.20.11+
 ```diff
 - pl.col('a').meta.write_json
 + pl.col('a').meta.serialize
 ```
 
-### Version 0.20.14
+### Version 0.20.14+
 ```diff
 - df.group_by_dynamic('time', every='2d', by='symbol')
 + df.group_by_dynamic('time', every='2d', group_by='symbol')
@@ -319,13 +319,13 @@ df.select(pl.len())
 + df.upsample('time', every='2d', group_by='symbol')
 ```
 
-### Version 0.20.17
+### Version 0.20.17+
 ```diff
 - pl.from_repr(tbl=data)
 + pl.from_repr(data=data)
 ```
 
-### Version 0.20.24
+### Version 0.20.24+
 ```diff
 - pl.col('a').rolling_min('2d', by='time')
 + pl.col('a').rolling_min_by(window_size='2d', by='time')
@@ -343,7 +343,7 @@ df.select(pl.len())
 + pl.col('a').rolling_sum_by(window_size='2d', by='time')
 ```
 
-### Version 0.20.29
+### Version 0.20.29+
 ```diff
 - df.join(df_right, how='outer')
 + df.join(df_right, how='full')
