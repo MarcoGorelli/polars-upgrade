@@ -8,9 +8,9 @@ from tokenize_rt import Offset
 from tokenize_rt import Token
 
 from polars_upgrade._ast_helpers import ast_to_offset
+from polars_upgrade._data import register
 from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
-from polars_upgrade._data import register
 
 
 def rename(
@@ -78,6 +78,9 @@ RENAMINGS = {
         ((0, 20, 6), "xlsx2csv_options", "engine_options"),
         ((0, 20, 7), "read_csv_options", "read_options"),
     ],
+    "from_repr": [
+        ((0, 20, 17), "tbl", "data"),
+    ],
 }
 
 
@@ -88,11 +91,11 @@ def visit_Call(
     parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-        isinstance(node.func, ast.Attribute)
-        and node.func.attr in RENAMINGS
-        and isinstance(node.func.value, ast.Name)
-        and node.func.value.id in state.aliases["polars"]
-        and len(node.keywords) >= 1
+        isinstance(node.func, ast.Attribute) and
+        node.func.attr in RENAMINGS and
+        isinstance(node.func.value, ast.Name) and
+        node.func.value.id in state.aliases["polars"] and
+        len(node.keywords) >= 1
     ):
         for min_version, old, new in RENAMINGS[node.func.attr]:
             if not state.settings.target_version >= min_version:

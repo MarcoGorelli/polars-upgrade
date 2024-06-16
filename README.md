@@ -309,6 +309,46 @@ df.select(pl.len())
 + pl.col('a').meta.serialize
 ```
 
+### Version 0.20.14
+```diff
+- df.group_by_dynamic('time', every='2d', by='symbol')
++ df.group_by_dynamic('time', every='2d', group_by='symbol')
+- df.rolling('time', period='2d', by='symbol')
++ df.rolling('time', period='2d', group_by='symbol')
+- df.upsample('time', every='2d', by='symbol')
++ df.upsample('time', every='2d', group_by='symbol')
+```
+
+### Version 0.20.17
+```diff
+- pl.from_repr(tbl=data)
++ pl.from_repr(data=data)
+```
+
+### Version 0.20.24
+```diff
+- pl.col('a').rolling_min('2d', by='time')
++ pl.col('a').rolling_min_by(window_size='2d', by='time')
+- pl.col('a').rolling_max('2d', by='time')
++ pl.col('a').rolling_max_by(window_size='2d', by='time')
+- pl.col('a').rolling_mean('2d', by='time')
++ pl.col('a').rolling_mean_by(window_size='2d', by='time')
+- pl.col('a').rolling_std('2d', by='time')
++ pl.col('a').rolling_std_by(window_size='2d', by='time')
+- pl.col('a').rolling_var('2d', by='time')
++ pl.col('a').rolling_var_by(window_size='2d', by='time')
+- pl.col('a').rolling_prod('2d', by='time')
++ pl.col('a').rolling_prod_by(window_size='2d', by='time')
+- pl.col('a').rolling_sum('2d', by='time')
++ pl.col('a').rolling_sum_by(window_size='2d', by='time')
+```
+
+### Version 0.20.29
+```diff
+- df.join(df_right, how='outer')
++ df.join(df_right, how='full')
+```
+
 ## Notes
 
 This work is derivative of [pyupgrade](https://github.com/asottile/pyupgrade) - many parts
