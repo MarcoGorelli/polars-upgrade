@@ -53,7 +53,8 @@ def visit_Attribute(
         not (
             isinstance(node.value, ast.Attribute) and
             node.value.attr in ("list", "name", "str", "struct", "dt")
-        )
+        ) and
+        len(parent.keywords) + len(parent.args) > 1
     ):
         min_version, args = DELETIONS[parent.func.attr]
         idxs = []

@@ -21,6 +21,10 @@ from polars_upgrade._main import fix_plugins
             "import polars as pl\n" 'pl.col("a").top_k(k=3)\n',
             (1, 0, 0),
         ),
+        pytest.param(
+            "import polars as pl\n" 'pl.col("a").top_k(maintain_order=True)\n',
+            (1, 0, 0),
+        ),
     ),
 )
 def test_fix_capture_output_noop(s, version):
@@ -56,11 +60,6 @@ def test_fix_capture_output_noop(s, version):
             "import polars as pl\n"
             'pl.col("a").top_k((2), maintain_order=False, multithreaded=True)\n',
             "import polars as pl\n" 'pl.col("a").top_k((2))\n',
-        ),
-        pytest.param(
-            "import polars as pl\n"
-            'pl.col("a").top_k(maintain_order=False)\n',
-            "import polars as pl\n" 'pl.col("a").top_k()\n',
         ),
     ],
 )

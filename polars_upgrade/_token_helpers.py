@@ -441,11 +441,8 @@ def delete_argument(
     func_args: Sequence[tuple[int, int]],
 ) -> None:
     if i == 0:
-        # delete leading whitespace before next token, if present
-        if len(func_args) > 1:
-            end_idx, _ = func_args[i + 1]
-        else:
-            end_idx = func_args[0][1]
+        # delete leading whitespace before next token
+        end_idx, _ = func_args[i + 1]
         while tokens[end_idx].name == "UNIMPORTANT_WS":
             end_idx += 1
 
