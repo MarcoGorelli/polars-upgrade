@@ -10,13 +10,13 @@ from collections.abc import Sequence
 from re import Match
 
 from tokenize_rt import NON_CODING_TOKENS
-from tokenize_rt import UNIMPORTANT_WS
-from tokenize_rt import Token
 from tokenize_rt import parse_string_literal
 from tokenize_rt import reversed_enumerate
 from tokenize_rt import rfind_string_parts
 from tokenize_rt import src_to_tokens
+from tokenize_rt import Token
 from tokenize_rt import tokens_to_src
+from tokenize_rt import UNIMPORTANT_WS
 
 from polars_upgrade import __version__ as version
 from polars_upgrade._ast_helpers import ast_parse
@@ -64,7 +64,7 @@ def _fixup_dedent_tokens(tokens: list[Token]) -> None:
 
 
 def fix_plugins(
-    contents_text: str, settings: Settings, *, aliases: set[str] | None = None
+    contents_text: str, settings: Settings, *, aliases: set[str] | None = None,
 ) -> str:
     try:
         ast_obj = ast_parse(contents_text)
@@ -118,7 +118,7 @@ ESCAPE_STARTS = frozenset(
         "6",
         "7",  # octal escapes
         "x",  # hex escapes
-    )
+    ),
 )
 ESCAPE_RE = re.compile(r"\\.", re.DOTALL)
 NAMED_ESCAPE_NAME = re.compile(r"\{[^}]+\}")
@@ -136,12 +136,12 @@ def _fix_escape_sequences(token: Token) -> Token:
     def _is_valid_escape(match: Match[str]) -> bool:
         c = match.group()[1]
         return (
-            c in ESCAPE_STARTS
-            or (not is_bytestring and c in "uU")
-            or (
-                not is_bytestring
-                and c == "N"
-                and bool(NAMED_ESCAPE_NAME.match(rest, match.end()))
+            c in ESCAPE_STARTS or
+            (not is_bytestring and c in "uU") or
+            (
+                not is_bytestring and
+                c == "N" and
+                bool(NAMED_ESCAPE_NAME.match(rest, match.end()))
             )
         )
 
@@ -200,7 +200,7 @@ def _fix_extraneous_parens(tokens: list[Token], i: int) -> None:
     end = i
 
     # empty tuple
-    if all(t.name in NON_CODING_TOKENS for t in tokens[start + 1 : i]):
+    if all(t.name in NON_CODING_TOKENS for t in tokens[start + 1: i]):
         return
 
     # search forward for the next non-coding token
@@ -240,11 +240,11 @@ def _fix_format_literal(tokens: list[Token], end: int) -> None:
         # format, slice avoids the `None` format key
         for _, fmtkey, spec, _ in parsed[:-1]:
             if (
-                fmtkey is not None
-                and inty(fmtkey)
-                and int(fmtkey) == last_int + 1
-                and spec is not None
-                and "{" not in spec
+                fmtkey is not None and
+                inty(fmtkey) and
+                int(fmtkey) == last_int + 1 and
+                spec is not None and
+                "{" not in spec
             ):
                 last_int += 1
             else:
@@ -267,10 +267,10 @@ def _fix_encode_to_binary(tokens: list[Token], i: int) -> None:
         latin1_ok = False
     # .encode('encoding')
     elif (
-        i + 3 < len(tokens)
-        and tokens[i + 1].src == "("
-        and tokens[i + 2].name == "STRING"
-        and tokens[i + 3].src == ")"
+        i + 3 < len(tokens) and
+        tokens[i + 1].src == "(" and
+        tokens[i + 2].name == "STRING" and
+        tokens[i + 3].src == ")"
     ):
         victims = slice(i - 1, i + 4)
         prefix, rest = parse_string_literal(tokens[i + 2].src)
@@ -290,12 +290,12 @@ def _fix_encode_to_binary(tokens: list[Token], i: int) -> None:
         prefix, rest = parse_string_literal(tokens[part].src)
         escapes = set(ESCAPE_RE.findall(rest))
         if (
-            not rest.isascii()
-            or "\\u" in escapes
-            or "\\U" in escapes
-            or "\\N" in escapes
-            or ("\\x" in escapes and not latin1_ok)
-            or "f" in prefix.lower()
+            not rest.isascii() or
+            "\\u" in escapes or
+            "\\U" in escapes or
+            "\\N" in escapes or
+            ("\\x" in escapes and not latin1_ok) or
+            "f" in prefix.lower()
         ):
             return
 
@@ -321,10 +321,10 @@ def _fix_tokens(contents_text: str) -> str:
         elif token.src == "encode" and i > 0 and tokens[i - 1].src == ".":
             _fix_encode_to_binary(tokens, i)
         elif (
-            token.utf8_byte_offset == 0
-            and token.line < 3
-            and token.name == "COMMENT"
-            and tokenize.cookie_re.match(token.src)
+            token.utf8_byte_offset == 0 and
+            token.line < 3 and
+            token.name == "COMMENT" and
+            tokenize.cookie_re.match(token.src)
         ):
             del tokens[i]
             assert tokens[i].name == "NL", tokens[i].name
@@ -369,7 +369,7 @@ Version = tuple[int, ...]
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("filenames", nargs="*")
-    parser.add_argument("--target-version", required=True, type=str)
+    parser.add_argument("-t", "--target-version", required=True, type=str)
     parser.add_argument(
         "--version",
         action="version",

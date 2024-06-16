@@ -8,9 +8,9 @@ from tokenize_rt import Offset
 from tokenize_rt import Token
 
 from polars_upgrade._ast_helpers import ast_to_offset
+from polars_upgrade._data import register
 from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
-from polars_upgrade._data import register
 from polars_upgrade._token_helpers import is_simple_expression
 
 
@@ -46,10 +46,10 @@ def visit_Attribute(
     parent: ast.AST,
 ) -> Iterable[tuple[Offset, TokenFunc]]:
     if (
-        isinstance(node.value, ast.Attribute)
-        and is_simple_expression(node.value.value, state.aliases["polars"])
-        and node.value.attr == "str"
-        and node.attr in RENAMINGS
+        isinstance(node.value, ast.Attribute) and
+        is_simple_expression(node.value.value, state.aliases["polars"]) and
+        node.value.attr == "str" and
+        node.attr in RENAMINGS
     ):
         min_version, new_name = RENAMINGS[node.attr]
         if state.settings.target_version >= min_version:
