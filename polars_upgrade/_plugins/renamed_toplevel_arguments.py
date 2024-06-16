@@ -43,6 +43,7 @@ RENAMINGS = {
         ((0, 19, 14), "comment_char", "comment_prefix"),
         ((0, 20, 4), "row_count_name", "row_index_name"),
         ((0, 20, 4), "row_count_offset", "row_index_offset"),
+        ((0, 20, 31), "dtypes", "schema"),
     ],
     "read_csv_batched": [
         ((0, 19, 14), "comment_char", "comment_prefix"),

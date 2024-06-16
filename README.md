@@ -349,6 +349,12 @@ df.select(pl.len())
 + df.join(df_right, how='full')
 ```
 
+### Version 0.20.31+
+```diff
+- pl.read_csv(file, dtypes=schema)
++ pl.read_csv(file, schema=schema)
+```
+
 ## Notes
 
 This work is derivative of [pyupgrade](https://github.com/asottile/pyupgrade) - many parts
