@@ -58,11 +58,16 @@ def visit_Attribute(
         lineno, col_offset = min(
             (kwarg.lineno, kwarg.col_offset) for kwarg in [*parent.keywords, *parent.args]
         )
+        for idx, kwarg in enumerate(parent.keywords, start=len(parent.args)):
+            if kwarg.arg == arg:
+                break
+        else:
+            return
         if state.settings.target_version >= min_version:
             func = functools.partial(
                 remove_argument,
                 line=lineno,
                 offset=col_offset,
-                arg_idx=1,
+                arg_idx=idx,
             )
             yield ast_to_offset(parent), func
