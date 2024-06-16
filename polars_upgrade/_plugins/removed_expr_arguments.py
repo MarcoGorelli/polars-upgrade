@@ -32,7 +32,7 @@ def remove_argument(
 
 # function name -> (min_version, arg)
 DELETIONS = {
-    "top_k": ((0, 20, 31), "maintain_order"),
+    "top_k": ((0, 20, 31), ("maintain_order", "multithreaded")),
 }
 
 
@@ -52,15 +52,14 @@ def visit_Attribute(
             node.value.attr in ("list", "name", "str", "struct", "dt")
         )
     ):
-        min_version, arg = DELETIONS[parent.func.attr]
-        if arg not in (x.arg for x in parent.keywords):
-            return
+        min_version, args = DELETIONS[parent.func.attr]
         lineno, col_offset = min(
             (kwarg.lineno, kwarg.col_offset) for kwarg in [*parent.keywords, *parent.args]
         )
+        idxs = []
         for idx, kwarg in enumerate(parent.keywords, start=len(parent.args)):
-            if kwarg.arg == arg:
-                break
+            if kwarg.arg in args:
+                idxs.append(idx)
         else:
             return
         if state.settings.target_version >= min_version:
@@ -68,6 +67,6 @@ def visit_Attribute(
                 remove_argument,
                 line=lineno,
                 offset=col_offset,
-                arg_idx=idx,
+                arg_idxs=idxs,
             )
             yield ast_to_offset(parent), func
