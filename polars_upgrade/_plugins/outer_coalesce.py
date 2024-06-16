@@ -14,18 +14,6 @@ from polars_upgrade._data import TokenFunc
 from polars_upgrade._token_helpers import find_closing_bracket
 
 
-def rename(
-    i: int,
-    tokens: list[Token],
-    *,
-    name: str,
-    new: str,
-) -> None:
-    while not (tokens[i].name == "NAME" and tokens[i].src == name):
-        i += 1
-    tokens[i] = tokens[i]._replace(src=new)
-
-
 def rename_and_add_argument(
     i: int,
     tokens: list[Token],
@@ -63,6 +51,8 @@ def visit_Call(
         for keyword in node.keywords:
             if keyword.arg == 'how':
                 break
+        else:
+            raise AssertionError()
         if not (
             isinstance(keyword.value, ast.Constant) and keyword.value.value == 'outer_coalesce'
         ):

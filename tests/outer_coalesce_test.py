@@ -15,6 +15,16 @@ from polars_upgrade._main import fix_plugins
             id="coalesce already specified",
         ),
         pytest.param(
+            "import polars as pl\n" 'df.join(right)\n',
+            (1, 0, 0),
+            id="no how",
+        ),
+        pytest.param(
+            "import polars as pl\n" 'df.join(right, how="left")\n',
+            (1, 0, 0),
+            id="left",
+        ),
+        pytest.param(
             "import polars as pl\n" 'df.join(right, how="outer_coalesce")\n',
             (0, 19, 19),
             id="too old to rock n roll",
@@ -28,6 +38,10 @@ def test_fix_capture_output_noop(s, version):
 @pytest.mark.parametrize(
     ("s", "expected"),
     [
+        pytest.param(
+            "import polars as pl\n" 'df.join(right, on="a", how="outer_coalesce")\n',
+            "import polars as pl\n" 'df.join(right, on="a", how="full", coalesce=True)\n',
+        ),
         pytest.param(
             "import polars as pl\n" 'df.join(right, how="outer_coalesce")\n',
             "import polars as pl\n" 'df.join(right, how="full", coalesce=True)\n',
