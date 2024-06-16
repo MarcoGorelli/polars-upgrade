@@ -22,12 +22,13 @@ def remove_argument(
     *,
     line: int,
     offset: int,
-    arg_idx: int,
+    arg_idxs: list[int],
 ) -> None:
     while not (tokens[i].name == 'OP' and tokens[i].src == '('):
         i -= 1
     func_args, _ = parse_call_args(tokens, i)
-    delete_argument(arg_idx, tokens, func_args)
+    for idx in reversed(arg_idxs):
+        delete_argument(idx, tokens, func_args)
 
 
 # function name -> (min_version, arg)
