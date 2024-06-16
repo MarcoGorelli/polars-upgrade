@@ -347,6 +347,8 @@ df.select(pl.len())
 ```diff
 - df.join(df_right, how='outer')
 + df.join(df_right, how='full')
+- df.join(df_right, how='outer_coalesce')
++ df.join(df_right, how='full', coalesce=True)
 ```
 
 ### Version 0.20.31+
