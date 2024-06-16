@@ -82,6 +82,9 @@ RENAMINGS = {
     "from_repr": [
         ((0, 20, 17), "tbl", "data"),
     ],
+    "SQLContext": [
+        ((0, 20, 31), "eager_execution", "eager"),
+    ],
 }
 
 
