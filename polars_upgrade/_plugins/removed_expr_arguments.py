@@ -61,8 +61,6 @@ def visit_Attribute(
         for idx, kwarg in enumerate(parent.keywords, start=len(parent.args)):
             if kwarg.arg in args:
                 idxs.append(idx)
-        else:
-            return
         if state.settings.target_version >= min_version:
             func = functools.partial(
                 remove_argument,
