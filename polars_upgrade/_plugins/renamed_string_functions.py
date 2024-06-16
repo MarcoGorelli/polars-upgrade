@@ -36,7 +36,6 @@ RENAMINGS = {
     "ljust": ((0, 19, 12), "pad_end"),
     "rjust": ((0, 19, 12), "pad_start"),
     "json_extract": ((0, 19, 15), "json_decode"),
-    "explode": ((0, 20, 31), "split('').explode"),
 }
 
 

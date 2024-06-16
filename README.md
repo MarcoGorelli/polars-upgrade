@@ -353,6 +353,8 @@ df.select(pl.len())
 ```diff
 - pl.read_csv(file, dtypes=schema)
 + pl.read_csv(file, schema=schema)
+- pl.SQLContext(eager_execution=True)
++ pl.SQLContext(eager=True)
 ```
 
 ## Notes
