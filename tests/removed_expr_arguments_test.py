@@ -29,7 +29,7 @@ def test_fix_capture_output_noop(s, version):
 
 @pytest.mark.parametrize(
     ("s", "expected"),
-    (
+    [
         pytest.param(
             "import polars as pl\n" 'pl.col("a").top_k(k=2, maintain_order=True)\n',
             "import polars as pl\n" 'pl.col("a").top_k(k=2)\n',
@@ -42,7 +42,17 @@ def test_fix_capture_output_noop(s, version):
             "import polars as pl\n" 'pl.col("a").top_k(maintain_order=False, k=2)\n',
             "import polars as pl\n" 'pl.col("a").top_k(k=2)\n',
         ),
-    ),
+        pytest.param(
+            "import polars as pl\n"
+            'pl.col("a").top_k(maintain_order=False, k=2, multithreaded=True)\n',
+            "import polars as pl\n" 'pl.col("a").top_k(k=2)\n',
+        ),
+        pytest.param(
+            "import polars as pl\n"
+            'pl.col("a").top_k(2, maintain_order=False, multithreaded=True)\n',
+            "import polars as pl\n" 'pl.col("a").top_k(2)\n',
+        ),
+    ],
 )
 def test_fix_capture_output(s, expected):
     ret = fix_plugins(s, settings=Settings(target_version=(0, 20, 31)))

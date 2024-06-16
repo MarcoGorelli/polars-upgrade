@@ -24,6 +24,11 @@ def remove_argument(
     offset: int,
     arg_idxs: list[int],
 ) -> None:
+    # go forwards to first arg
+    while ((tokens[i].line, tokens[i].utf8_byte_offset) < (line, offset)):
+        i += 1
+    # go backwards to opening paren
+    i -= 1
     while not (tokens[i].name == 'OP' and tokens[i].src == '('):
         i -= 1
     func_args, _ = parse_call_args(tokens, i)
@@ -68,4 +73,4 @@ def visit_Attribute(
                 offset=col_offset,
                 arg_idxs=idxs,
             )
-            yield ast_to_offset(parent), func
+            yield ast_to_offset(parent.func), func
