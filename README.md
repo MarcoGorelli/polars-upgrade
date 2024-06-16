@@ -355,6 +355,8 @@ df.select(pl.len())
 + pl.read_csv(file, schema=schema)
 - pl.SQLContext(eager_execution=True)
 + pl.SQLContext(eager=True)
+- pl.col('a').top_k(k=2, maintain_order=True)
++ pl.col('a').top_k(k=2)
 ```
 
 ## Notes
