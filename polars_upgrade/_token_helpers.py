@@ -7,9 +7,9 @@ from collections.abc import Sequence
 from typing import NamedTuple
 
 from tokenize_rt import NON_CODING_TOKENS
-from tokenize_rt import UNIMPORTANT_WS
 from tokenize_rt import Token
 from tokenize_rt import tokens_to_src
+from tokenize_rt import UNIMPORTANT_WS
 
 _OPENING = frozenset("([{")
 _CLOSING = frozenset(")]}")
@@ -98,9 +98,9 @@ def victims(
             starts.append(i)
 
         if (
-            tokens[i].matches(name="OP", src=",")
-            and depth == arg_depth
-            and first_comma_index is None
+            tokens[i].matches(name="OP", src=",") and
+            depth == arg_depth and
+            first_comma_index is None
         ):
             first_comma_index = i
 
@@ -170,9 +170,8 @@ class Block(NamedTuple):
         block_indent = None
         for i in range(self.block, self.end):
             if (
-                tokens[i - 1].name in ("NL", "NEWLINE")
-                and tokens[i].name in ("INDENT", UNIMPORTANT_WS)
-                and
+                tokens[i - 1].name in ("NL", "NEWLINE") and
+                tokens[i].name in ("INDENT", UNIMPORTANT_WS) and
                 # comments can have arbitrary indentation so ignore them
                 tokens[i + 1].name != "COMMENT"
             ):
@@ -197,14 +196,14 @@ class Block(NamedTuple):
             ):
                 # make sure we preserve *at least* the initial indent
                 s = tokens[i].src
-                s = s[:initial_indent] + s[initial_indent + diff :]
+                s = s[:initial_indent] + s[initial_indent + diff:]
                 tokens[i] = tokens[i]._replace(src=s)
 
     def replace_condition(self, tokens: list[Token], new: list[Token]) -> None:
         start = self.start
         while tokens[start].name == "UNIMPORTANT_WS":
             start += 1
-        tokens[start : self.colon] = new
+        tokens[start: self.colon] = new
 
     def _trim_end(self, tokens: list[Token]) -> Block:
         """the tokenizer reports the end of the block at the beginning of
@@ -214,9 +213,9 @@ class Block(NamedTuple):
         while tokens[i].name in NON_CODING_TOKENS | {"DEDENT", "NEWLINE"}:
             # if we find an indented comment inside our block, keep it
             if (
-                tokens[i].name in {"NL", "NEWLINE"}
-                and tokens[i + 1].name == UNIMPORTANT_WS
-                and len(tokens[i + 1].src) > self._initial_indent(tokens)
+                tokens[i].name in {"NL", "NEWLINE"} and
+                tokens[i + 1].name == UNIMPORTANT_WS and
+                len(tokens[i + 1].src) > self._initial_indent(tokens)
             ):
                 break
             # otherwise we've found another line to remove
@@ -263,15 +262,15 @@ class Block(NamedTuple):
 
 def _is_on_a_line_by_self(tokens: list[Token], i: int) -> bool:
     return (
-        tokens[i - 2].name == "NL"
-        and tokens[i - 1].name == UNIMPORTANT_WS
-        and tokens[i + 1].name == "NL"
+        tokens[i - 2].name == "NL" and
+        tokens[i - 1].name == UNIMPORTANT_WS and
+        tokens[i + 1].name == "NL"
     )
 
 
 def remove_brace(tokens: list[Token], i: int) -> None:
     if _is_on_a_line_by_self(tokens, i):
-        del tokens[i - 1 : i + 2]
+        del tokens[i - 1: i + 2]
     else:
         del tokens[i]
 
@@ -321,10 +320,10 @@ def remove_base_class(i: int, tokens: list[Token]) -> None:
         # if there's space / comment afterwards remove that too
         while tokens[right + 1].name in {UNIMPORTANT_WS, "COMMENT"}:
             right += 1
-        del tokens[left + 1 : right + 1]
+        del tokens[left + 1: right + 1]
     # multiple bases, base is not first
     else:
-        del tokens[left : last_part + 1]
+        del tokens[left: last_part + 1]
 
 
 def remove_decorator(i: int, tokens: list[Token]) -> None:
@@ -335,7 +334,7 @@ def remove_decorator(i: int, tokens: list[Token]) -> None:
     end = i + 1
     while tokens[end].name != "NEWLINE":
         end += 1
-    del tokens[i - 1 : end + 1]
+    del tokens[i - 1: end + 1]
 
 
 def parse_call_args(
@@ -433,7 +432,7 @@ def replace_name(i: int, tokens: list[Token], *, name: str, new: str) -> None:
         if tokens[j].src == ")":
             return
         j += 1
-    tokens[i : j + 1] = [new_token]
+    tokens[i: j + 1] = [new_token]
 
 
 def delete_argument(
@@ -442,14 +441,17 @@ def delete_argument(
     func_args: Sequence[tuple[int, int]],
 ) -> None:
     if i == 0:
-        # delete leading whitespace before next token
-        end_idx, _ = func_args[i + 1]
+        # delete leading whitespace before next token, if present
+        if len(func_args) > 1:
+            end_idx, _ = func_args[i + 1]
+        else:
+            end_idx = func_args[0][1]
         while tokens[end_idx].name == "UNIMPORTANT_WS":
             end_idx += 1
 
-        del tokens[func_args[i][0] : end_idx]
+        del tokens[func_args[i][0]: end_idx]
     else:
-        del tokens[func_args[i - 1][1] : func_args[i][1]]
+        del tokens[func_args[i - 1][1]: func_args[i][1]]
 
 
 def replace_argument(
@@ -506,10 +508,10 @@ def is_simple_expression(node: ast.expr, aliases: set[str]) -> bool:
         if isinstance(node, ast.Call):
             node = node.func
         elif (
-            isinstance(node, ast.Attribute)
-            and node.attr.islower()
-            and isinstance(node.value, ast.Name)
-            and node.value.id in aliases
+            isinstance(node, ast.Attribute) and
+            node.attr.islower() and
+            isinstance(node.value, ast.Name) and
+            node.value.id in aliases
         ):
             return True
         elif isinstance(node, ast.Attribute):
