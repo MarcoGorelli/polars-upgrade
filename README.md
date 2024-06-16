@@ -5,6 +5,8 @@ polars-upgrade
 <img width="200" src="https://github.com/MarcoGorelli/polars-upgrade/assets/33491632/91a50994-af5d-4abd-8e9f-e3125258c167">
 </p>
 
+[![PyPI version](https://badge.fury.io/py/polars-upgrade.svg)](https://badge.fury.io/py/polars-upgrade)
+
 Automatically upgrade your Polars code so it's compatible with future versions.
 
 ## Installation
