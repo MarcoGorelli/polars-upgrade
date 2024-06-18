@@ -11,7 +11,6 @@ from polars_upgrade._ast_helpers import ast_to_offset
 from polars_upgrade._data import register
 from polars_upgrade._data import State
 from polars_upgrade._data import TokenFunc
-from polars_upgrade._token_helpers import find_closing_bracket
 
 
 def rename_and_add_argument(
@@ -24,15 +23,9 @@ def rename_and_add_argument(
     new_value: str,
     new_argument: str,
 ) -> None:
-    while not (tokens[i].name == "NAME" and tokens[i].src == function_name):
-        i += 1
-    while not (tokens[i].name == "OP" and tokens[i].src == "("):
-        i += 1
-    j = find_closing_bracket(tokens, i)
-    tokens[j] = tokens[j]._replace(src=', ' + new_argument + ')')
     while not (tokens[i].line, tokens[i].utf8_byte_offset) == (line, offset):
         i += 1
-    tokens[i] = tokens[i]._replace(src=new_value)
+    tokens[i] = tokens[i]._replace(src=f'{new_value}, {new_argument}')
 
 
 @register(ast.Call)

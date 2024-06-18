@@ -48,7 +48,17 @@ def test_fix_capture_output_noop(s, version):
         ),
         pytest.param(
             "import polars as pl\n" 'df.join(right, how="outer_coalesce", on="a")\n',
-            "import polars as pl\n" 'df.join(right, how="full", on="a", coalesce=True)\n',
+            "import polars as pl\n" 'df.join(right, how="full", coalesce=True, on="a")\n',
+        ),
+        pytest.param(
+            "import polars as pl\n"
+            'df.join(\n'
+            '    right, how="outer_coalesce", on="a"\n'
+            ').join(rightest, how="outer_coalesce")\n',
+            "import polars as pl\n"
+            'df.join(\n'
+            '    right, how="full", coalesce=True, on="a"\n'
+            ').join(rightest, how="full", coalesce=True)\n',
         ),
     ],
 )
